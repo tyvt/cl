@@ -35,17 +35,21 @@ const getMagnetUrl = (url) => {
       const hashCode = res.data.match(
         /(?<=Code:\s)(.*?)(?=<\/span>)/g
       )[0]
-      console.log('magnet', `${MAGNET_PREFIX}${hashCode}`)
       resolve(`${MAGNET_PREFIX}${hashCode}`)
     })
   })
 }
 const start = async () => {
-  for (let index = 0; index < urls.length; index++) {
+  for (let index = 50; index < urls.length; index++) {
     const RMDownUrl = await getRMdownUrl(urls[index])
     const magnetUrl = await getMagnetUrl(RMDownUrl)
     const data = fs.readFileSync("./magnet.txt", "utf-8")
-    fs.writeFileSync("./magnet.txt", `${data}\n${magnetUrl}`)
+    if (data.includes(magnetUrl)) {
+      console.log(`重复`)
+    } else {
+      console.log(`第${index + 1}条抓取完毕`)
+      fs.writeFileSync("./magnet.txt", `${data}\n${magnetUrl}`)
+    }
     sleep(SLEEP_TIME)
   }
 }
