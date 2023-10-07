@@ -6,7 +6,7 @@ import {
   HEADERS,
 } from "./constant.js"
 import { sleep } from "./utils.js"
-const TOTAL_PAGES = 2 // 非会员最多抓100页
+const TOTAL_PAGES = 100 // 非会员最多抓100页
 const APPROVAL_SIZE = 8
 const SLEEP_TIME = 3000
 const getCurrentPageURLs = (currentPage) => {
@@ -23,7 +23,7 @@ const getCurrentPageURLs = (currentPage) => {
       for (const iterator of domList) {
         const href = iterator.attribs.href
         // 节点标题
-        const title = iterator.children[0].data
+        const title = iterator.children[0].data || ''
         const size = title.match(/(?<=\/)([0-9]+(.[0-9]{0,})?)(?=\G)/g)
         if (size && size.length && Number(size[0]) >= APPROVAL_SIZE) {
           validURLs.push(`${CL_DOMAIN}/${href}`)
@@ -36,15 +36,12 @@ const getCurrentPageURLs = (currentPage) => {
 }
 
 const start = async () => {
-  let flag = false
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    if (flag) return
     const urls = await getCurrentPageURLs(page)
     const data = fs.readFileSync("./url.txt", "utf-8")
     urls.forEach(link => {
       if (data.includes(link)) {
         console.log(`重复`)
-        flag = true
       } else {
         fs.writeFileSync("./url.txt", `${data}\n${link}`)
       }
