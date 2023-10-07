@@ -29,21 +29,25 @@ const getCurrentPageURLs = (currentPage) => {
           validURLs.push(`${CL_DOMAIN}/${href}`)
         }
       }
-      console.log(`第${currentPage}页抓取完毕`)
       resolve(validURLs)
     })
   })
 }
 
 const start = async () => {
+  let flag = false
   for (let page = 1; page <= TOTAL_PAGES; page++) {
+    if (flag) return
+    console.log(`抓取第${page}页`)
     const urls = await getCurrentPageURLs(page)
-    const data = fs.readFileSync("./url.txt", "utf-8")
+    const data = fs.readFileSync("./outputs/url.txt", "utf-8")
     urls.forEach(link => {
       if (data.includes(link)) {
-        console.log(`重复`)
+        flag = true
+        console.log(`${link} 重复,已退出`)
       } else {
-        fs.writeFileSync("./url.txt", `${data}\n${link}`)
+        fs.writeFileSync("./outputs/url.txt", `${data}\n${link}`)
+        console.log(`${link} 抓取成功,已写入`)
       }
     })
     sleep(SLEEP_TIME)

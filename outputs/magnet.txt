@@ -65,3 +65,6 @@ magnet:?xt=urn:btih:3b18ca1f3e24faf112935fe5f50e78e1662f1bb3
 magnet:?xt=urn:btih:2ce05a6c10e0feb0a8537045ee316d14d58c5fd9
 magnet:?xt=urn:btih:2064427e2a39f392360db5a85299fcc7fa69f58a
 magnet:?xt=urn:btih:8e0ca92c9ad12acf41296cd8bd1a60d758ff6d7e
+magnet:?xt=urn:btih:ae05be79ded22c2084ade2e2659bc4845072872a
+magnet:?xt=urn:btih:9e23de0349afce28afad182936fbafebba13766e
+magnet:?xt=urn:btih:9ad8eb95e4b3081803b6cec63ae287bc38d819a7

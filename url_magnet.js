@@ -8,8 +8,7 @@ import {
 } from "./constant.js"
 import { sleep } from "./utils.js"
 const SLEEP_TIME = 3000
-const data = fs.readFileSync("./url.txt", "utf-8")
-const urls = data.split('\n').filter(e => e)
+const urls = fs.readFileSync("./outputs/url.txt", "utf-8").split('\n').filter(e => e)
 const getRMdownUrl = (url) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -40,15 +39,19 @@ const getMagnetUrl = (url) => {
   })
 }
 const start = async () => {
-  for (let index = 50; index < urls.length; index++) {
+  let flag = false
+  for (let index = urls.length - 1; index > 0; index--) {
+    if (flag) return
+    console.log(`抓取第${index + 1}条, ${urls[index]}`)
     const RMDownUrl = await getRMdownUrl(urls[index])
     const magnetUrl = await getMagnetUrl(RMDownUrl)
-    const data = fs.readFileSync("./magnet.txt", "utf-8")
+    const data = fs.readFileSync("./outputs/magnet.txt", "utf-8")
     if (data.includes(magnetUrl)) {
-      console.log(`重复`)
+      flag = true
+      console.log(`重复,已退出`)
     } else {
-      console.log(`第${index + 1}条抓取完毕`)
-      fs.writeFileSync("./magnet.txt", `${data}\n${magnetUrl}`)
+      fs.writeFileSync("./outputs/magnet.txt", `${data}\n${magnetUrl}`)
+      console.log(`抓取成功,已写入`)
     }
     sleep(SLEEP_TIME)
   }
