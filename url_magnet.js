@@ -1,6 +1,6 @@
-import axios from "axios"
-import { load } from "cheerio"
 import fs from "fs"
+import https from 'https'
+import http from 'http'
 import {
   HEADERS,
   MAGNET_PREFIX,
@@ -9,32 +9,38 @@ import {
 import { sleep } from "./utils.js"
 const SLEEP_TIME = 3000
 const urls = fs.readFileSync("./outputs/url.txt", "utf-8").split('\n').filter(e => e)
+const regExp = new RegExp(`(?<=href=")${RM_DOWN_DOMAIN}\\?hash=.*?(?=")`, 'g')
 const getRMdownUrl = (url) => {
   return new Promise((resolve, reject) => {
-    axios({
-      method: "get",
-      url: url,
-      headers: HEADERS,
-    }).then((res) => {
-      const $ = load(res.data)
-      const linkTags = $('[id=conttpc]').find(`a:contains('${RM_DOWN_DOMAIN}')`)
-      for (const iterator of linkTags) {
-        resolve(iterator.attribs.href)
-      }
+    https.get(url, {
+      headers: HEADERS
+    }, (res) => {
+      let rawData = ''
+      res.on('data', (d) => {
+        rawData += d.toString()
+      })
+      res.on('end', () => {
+        const resUrl = rawData.match(regExp)?.[0]
+        resolve(resUrl)
+      })
     })
   })
 }
 const getMagnetUrl = (url) => {
   return new Promise((resolve, reject) => {
-    axios({
-      method: "get",
-      url: url,
-      headers: HEADERS,
-    }).then((res) => {
-      const hashCode = res.data.match(
-        /(?<=Code:\s)(.*?)(?=<\/span>)/g
-      )[0]
-      resolve(`${MAGNET_PREFIX}${hashCode}`)
+    http.get(url, {
+      headers: HEADERS
+    }, (res) => {
+      let rawData = ''
+      res.on('data', (d) => {
+        rawData += d.toString()
+      })
+      res.on('end', () => {
+        const hashCode = rawData.match(
+          /(?<=Code:\s)(.*?)(?=<\/span>)/g
+        )?.[0]
+        resolve(`${MAGNET_PREFIX}${hashCode}`)
+      })
     })
   })
 }
@@ -46,14 +52,20 @@ const start = async () => {
     const RMDownUrl = await getRMdownUrl(urls[index])
     const magnetUrl = await getMagnetUrl(RMDownUrl)
     const data = fs.readFileSync("./outputs/magnet.txt", "utf-8")
+    const downloaded = fs.readFileSync("./outputs/downloaded.txt", "utf-8")
     if (data.includes(magnetUrl)) {
       flag = true
-      console.log(`重复,已退出`)
-    } else {
+      console.log(`地址重复,退出`)
+    } else if (downloaded.includes(magnetUrl)) {
+      flag = true
+      console.log(`已下载,退出`)
+    }
+    else {
       fs.writeFileSync("./outputs/magnet.txt", `${data}\n${magnetUrl}`)
       console.log(`抓取成功,已写入`)
     }
     sleep(SLEEP_TIME)
   }
+  console.log(`抓取完毕,已结束`)
 }
 start()

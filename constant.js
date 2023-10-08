@@ -5,7 +5,8 @@ export const HEADERS = {
   pragma: 'no-cache',
   'sec-fetch-user': '?1',
   'upgrade-insecure-requests': '1',
-  'User-Agent': 'Apifox/1.0.0 (https://apifox.com)'
+  'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
+  'Content-Type': 'text/html; charset=utf-8'
 }
 
 export const MAGNET_PREFIX = 'magnet:?xt=urn:btih:'
