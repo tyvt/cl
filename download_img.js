@@ -1,59 +1,46 @@
-import fs from "fs"
-import https from 'https'
-import {
-  HEADERS,
-} from "./constant.js"
-import { sleep } from "./utils.js"
-const SLEEP_TIME = 100
-const urls = fs.readFileSync("./urls/imgUrl.txt", "utf-8").split('\n').filter(e => e)
+import fs from "fs";
+import { request, writeUrlToFilePath } from "./utils.js";
+const urls = fs
+  .readFileSync("./urls/imgUrl.txt", "utf-8")
+  .split("\n")
+  .filter((e) => e);
 const downloadImg = (url) => {
   return new Promise((resolve, reject) => {
-    https.get(url, {
-      headers: HEADERS
-    }, (res) => {
-      res.setEncoding('binary')
-      let rawData = ''
-      res.on('data', (d) => {
-        rawData += d
-      })
-      res.on('end', () => {
-        if (Number(rawData.length) / 1024 / 1024 >= 5) {
-          const fileName = url.split('/').at(-1).replace(/\r/, '')
-          fs.writeFileSync(`./images/${fileName}`, rawData, 'binary')
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-
-      })
-    }).on('error', (e) => {
-      resolve(false)
-    })
-  })
-}
+    const blackList = fs.readFileSync("./urls/blackList.txt", "utf-8");
+    if (blackList.includes(new URL(url).origin)) {
+      resolve({ result: "fail", message: `域名在黑名单中,跳过` });
+    } else {
+      request(url)
+        .then((res) => {
+          if (Number(res.length) / 1024 / 1024 >= 5) {
+            const fileName = url.split("/").at(-1).replace(/\r/, "");
+            fs.writeFileSync(`./images/${fileName}`, res, "binary");
+            resolve({ result: "success", message: `下载完成` });
+          } else {
+            resolve({ result: "fail", message: `图片大小不满足要求,跳过` });
+          }
+        })
+        .catch(() => {
+          writeUrlToFilePath(new URL(url).origin, `./urls/blackList.txt`);
+          resolve({
+            result: "fail",
+            message: `${url}域名无法访问，加入黑名单`,
+          });
+        });
+    }
+  });
+};
 const start = async () => {
   for (let index = urls.length - 1; index > 0; index--) {
-    const downloaded = fs.readFileSync("./urls/downloadedImg.txt", "utf-8")
+    const downloaded = fs.readFileSync("./urls/downloadedImg.txt", "utf-8");
     if (downloaded.includes(urls[index])) {
-      const origin = fs.readFileSync("./urls/imgUrl.txt", "utf-8")
-      fs.writeFileSync("./urls/imgUrl.txt", origin.replace(urls[index], '').replace(/\n/, ''))
-      console.log(`地址重复,删除重复路径`)
+      console.log(`此地址已下载`);
     } else {
-      console.log(`下载第${index + 1}张图片, ${urls[index]}`)
-      const result = await downloadImg(urls[index])
-      if (result) {
-        fs.writeFileSync("./urls/downloadedImg.txt", `${downloaded}\n${urls[index]}`)
-        const origin = fs.readFileSync("./urls/imgUrl.txt", "utf-8")
-        fs.writeFileSync("./urls/imgUrl.txt", origin.replace(urls[index], '').replace(/\n/, ''))
-        console.log(`下载完成,删除路径`)
-      } else {
-        const origin = fs.readFileSync("./urls/imgUrl.txt", "utf-8")
-        fs.writeFileSync("./urls/imgUrl.txt", origin.replace(urls[index], '').replace(/\n/, ''))
-        console.log(`删除无效路径`)
-      }
+      console.log(`下载第${index + 1}张图片, ${urls[index]}`);
+      const result = await downloadImg(urls[index]);
+      console.log(result.message);
     }
-    sleep(SLEEP_TIME)
   }
-  console.log(`全部下载完毕,已结束`)
-}
-start()
+  console.log(`全部下载完毕,已结束`);
+};
+start();

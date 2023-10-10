@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node fid2.js && node url_magnet.js"
+    "start": "node fid2.js && node url_magnet.js",
+    "crawlerByLikes": "node crawlerByLikes.js"
   },
   "author": "",
   "license": "ISC",
