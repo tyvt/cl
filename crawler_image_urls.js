@@ -32,7 +32,9 @@ const getImageUrlStart = async (category) => {
   }
 };
 
-for await (const category of CATEGORIES) {
+const filterCategory = CATEGORIES.filter((e) => e.type == "image");
+
+for await (const category of filterCategory) {
   console.log(`Fetch ${category.description} begin.`);
   await getImageUrlStart(category);
   console.log(`Fetch ${category.description} end.`);
