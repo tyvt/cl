@@ -23,7 +23,7 @@ const getUrlStart = async (category) => {
             .children(".s3")
             .text()
         );
-        if (iterator.attribs.href.endsWith(".html") && likes > APPROVAL_LIKE) {
+        if (iterator.attribs.href.endsWith(".html") && likes >= APPROVAL_LIKE) {
           writeUrlToFilePath(
             `${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
