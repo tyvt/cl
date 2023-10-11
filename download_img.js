@@ -8,7 +8,7 @@ const downloadImg = (url) => {
   return new Promise((resolve, reject) => {
     const blackList = fs.readFileSync("./urls/blackList.txt", "utf-8");
     if (blackList.includes(new URL(url).origin)) {
-      resolve({ result: "fail", message: `域名在黑名单中,跳过` });
+      resolve({ result: "fail", message: `域名在黑名单中, skipped.` });
     } else {
       request(url)
         .then((res) => {
@@ -17,7 +17,10 @@ const downloadImg = (url) => {
             fs.writeFileSync(`./images/${fileName}`, res, "binary");
             resolve({ result: "success", message: `下载完成` });
           } else {
-            resolve({ result: "fail", message: `图片大小不满足要求,跳过` });
+            resolve({
+              result: "fail",
+              message: `图片大小不满足要求, skipped.`,
+            });
           }
         })
         .catch(() => {

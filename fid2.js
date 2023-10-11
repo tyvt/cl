@@ -1,9 +1,7 @@
-import fs from "fs";
 import { CL_DOMAIN } from "./constant.js";
-import { request, sleep } from "./utils.js";
-const TOTAL_PAGES = 100; // 非会员最多抓100页
+import { request, sleep, writeUrlToFilePath } from "./utils.js";
+const TOTAL_PAGES = 10; // 非会员最多抓100页
 const APPROVAL_SIZE = 20;
-const SLEEP_TIME = 3000;
 const getCurrentPageURLs = (currentPage) => {
   const validURLs = [];
   return new Promise((resolve, reject) => {
@@ -29,23 +27,14 @@ const getCurrentPageURLs = (currentPage) => {
 };
 
 const start = async () => {
-  let flag = false;
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    if (flag) return;
     console.log(`获取第${page}页`);
     const urls = await getCurrentPageURLs(page);
     console.log(`获取到${urls.length}条`);
     urls.forEach((link) => {
-      const data = fs.readFileSync("./urls/fid2.txt", "utf-8");
-      if (data.includes(link)) {
-        flag = true;
-        console.log(`${link} 地址重复,跳过`);
-      } else {
-        fs.writeFileSync("./urls/fid2.txt", `${data}\n${link}`);
-        console.log(`${link} 获取成功,已写入`);
-      }
+      writeUrlToFilePath(link, `./urls/fid2.txt`);
     });
-    sleep(SLEEP_TIME);
+    sleep();
   }
   console.log(`获取完毕,已结束`);
 };

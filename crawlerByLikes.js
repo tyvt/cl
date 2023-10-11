@@ -1,9 +1,15 @@
 import { load } from "cheerio";
 import fs from "fs";
-import { CL_DOMAIN, CATEGORIES } from "./constant.js";
+import {
+  CL_DOMAIN,
+  CATEGORIES,
+  DETAIL_PAGE_PREFIX,
+  URL_REG,
+  IMAGE_SUFFIX,
+} from "./constant.js";
 import { request, writeUrlToFilePath, sleep } from "./utils.js";
-const TOTAL_PAGES = 1; // 非会员最多抓100页
-const APPROVAL_LIKE = 1;
+const TOTAL_PAGES = 100; // 非会员最多抓100页
+const APPROVAL_LIKE = 0;
 
 const getUrlStart = async (category) => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
@@ -27,7 +33,9 @@ const getUrlStart = async (category) => {
         );
         if (iterator.attribs.href.endsWith(".html") && likes > APPROVAL_LIKE) {
           writeUrlToFilePath(
-            `${CL_DOMAIN}/${iterator.attribs.href}`,
+            `${iterator.attribs.href
+              .replace(`${DETAIL_PAGE_PREFIX}`, "")
+              .replace(".html", "")}`,
             `./urls/fid${category.fid}.txt`
           );
         }
@@ -42,22 +50,29 @@ const getImageUrlStart = async (category) => {
     .split("\n")
     .filter((e) => e);
   for (let index = urls.length - 1; index > 0; index--) {
-    console.log(`获取第${index + 1}条, ${urls[index]}`);
-    const res = await request(urls[index]);
-    const imgUrls = res.match(/(?<=ess-data=')(.*?)(?=')/g);
+    console.log(
+      `获取第${index + 1}条, ${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${
+        urls[index]
+      }.html`
+    );
+    const res = await request(
+      `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${urls[index]}.html`
+    );
+    const imgUrls = res.match(/(?<=ess-data=')(.*?)(?=')/g) || [];
     const blackList = fs.readFileSync("./urls/blackList.txt", "utf-8");
     imgUrls.forEach((url) => {
-      if (blackList.includes(new URL(url).origin)) {
-        console.log(`域名在黑名单中,跳过`);
-      } else if (url.endsWith(".gif")) {
-        console.log(`GIF格式,跳过`);
+      const matchUrl = url.match(URL_REG) || [];
+      if (matchUrl.length && blackList.includes(new URL(matchUrl[0]).origin)) {
+        console.log(`域名在黑名单中, skipped.`);
+      } else if (!IMAGE_SUFFIX.some((e) => url.endsWith(e))) {
+        console.log(`格式不符合, skipped.`);
       } else {
         writeUrlToFilePath(url, `./urls/imgUrl.txt`);
       }
     });
     sleep();
   }
-  console.log(`获取完毕,已结束`);
+  console.log(`Finish.`);
 };
 
 for await (const category of CATEGORIES) {
