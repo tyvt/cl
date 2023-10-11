@@ -1,0 +1,37 @@
+name: crawler detail page urls
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: run script
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
+        run: |
+          npm i
+          node crawler_detail_page_urls.js
+      - name: Commit
+        run: |
+          git config --global user.email example@example.com
+          git config --global user.name example
+          git add .
+          git commit -m"`date +'%Y-%m-%d'` crawler detail page urls"
+          git pull --rebase
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

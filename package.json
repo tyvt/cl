@@ -1,14 +1,11 @@
 {
-  "name": "test",
+  "name": "cl_crawler",
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "node crawlerByLikes.js"
+    "start": "node crawler_detail_urls.js && node crawler_image_urls.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "user-agents": "^1.0.1444"

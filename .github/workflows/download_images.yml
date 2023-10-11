@@ -1,4 +1,4 @@
-name: schedule
+name: download images
 on:
   workflow_dispatch:
   schedule:
@@ -16,19 +16,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: run crawler.sh
+      - name: run script
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
           npm i
-          npm start
+          node download_images.js
       - name: Commit
         run: |
           git config --global user.email example@example.com
           git config --global user.name example
           git add .
-          git commit -m"`date +'%Y-%m-%d'` fetch"
+          git commit -m"`date +'%Y-%m-%d'` download images"
           git pull --rebase
 
       - name: Push changes
