@@ -1,4 +1,4 @@
-import { CL_DOMAIN } from "./constant.js";
+import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js";
 import { request, writeUrlToFilePath } from "./utils.js";
 const TOTAL_PAGES = 100;
 const APPROVAL_SIZE = 20;
@@ -17,7 +17,7 @@ const getCurrentPageURLs = (currentPage) => {
         rawArr.forEach((e) => {
           const matchArr = e.match(/(?<=href=").*?(?=")/g) || [];
           if (matchArr.length) {
-            validURLs.push(`${CL_DOMAIN}/${matchArr[0]}`);
+            validURLs.push(`${matchArr[0]}`);
           }
         });
         resolve(validURLs);
@@ -28,11 +28,12 @@ const getCurrentPageURLs = (currentPage) => {
 
 const start = async () => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    console.log(`Fetch page${page}.`);
     const urls = await getCurrentPageURLs(page);
-    console.log(`Total ${urls.length}.`);
     urls.forEach((link) => {
-      writeUrlToFilePath(link, `./urls/fid2.txt`);
+      writeUrlToFilePath(
+        `${link.replace(`${DETAIL_PAGE_PREFIX}`, "").replace(".html", "")}`,
+        `./urls/fid2.txt`
+      );
     });
   }
   console.log(`Finish.`);

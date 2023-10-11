@@ -48,11 +48,6 @@ const getImageUrlStart = async (category) => {
     .split("\n")
     .filter((e) => e);
   for (let index = urls.length - 1; index > 0; index--) {
-    console.log(
-      `Fetch image${index + 1}, ${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${
-        urls[index]
-      }.html`
-    );
     const res = await request(
       `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${urls[index]}.html`
     );

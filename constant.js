@@ -1,6 +1,9 @@
 export const CL_DOMAIN = "https://cl.3572y.xyz";
 export const DETAIL_PAGE_PREFIX = "htm_data";
 export const RM_DOWN_DOMAIN = "http://www.rmdown.com/link.php";
+export const HEADERS = {
+  "User-Agent": "Apifox/1.0.0 (https://apifox.com)",
+};
 
 export const MAGNET_PREFIX = "magnet:?xt=urn:btih:";
 

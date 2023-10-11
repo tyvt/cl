@@ -1,7 +1,11 @@
 import fs from "fs";
-import https from "https";
-import http from "http";
-import { MAGNET_PREFIX, RM_DOWN_DOMAIN } from "./constant.js";
+import {
+  CL_DOMAIN,
+  DETAIL_PAGE_PREFIX,
+  MAGNET_PREFIX,
+  RM_DOWN_DOMAIN,
+} from "./constant.js";
+import { request, writeUrlToFilePath } from "./utils.js";
 const urls = fs
   .readFileSync("./urls/fid2.txt", "utf-8")
   .split("\n")
@@ -9,48 +13,28 @@ const urls = fs
 const regExp = new RegExp(`(?<=href=")${RM_DOWN_DOMAIN}\\?hash=.*?(?=")`, "g");
 const getRMdownUrl = (url) => {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      let rawData = "";
-      res.on("data", (d) => {
-        rawData += d.toString();
-      });
-      res.on("end", () => {
-        const resUrl = rawData.match(regExp)?.[0];
-        resolve(resUrl);
-      });
+    request(url).then((res) => {
+      const resUrl = res.match(regExp)?.[0];
+      resolve(resUrl);
     });
   });
 };
 const getMagnetUrl = (url) => {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      let rawData = "";
-      res.on("data", (d) => {
-        rawData += d.toString();
-      });
-      res.on("end", () => {
-        const hashCode = rawData.match(/(?<=Code:\s)(.*?)(?=<\/span>)/g)?.[0];
-        resolve(`${MAGNET_PREFIX}${hashCode}`);
-      });
+    request(url).then((res) => {
+      const hashCode = res.match(/(?<=Code:\s)(.*?)(?=<\/span>)/g)?.[0];
+      resolve(`${MAGNET_PREFIX}${hashCode}`);
     });
   });
 };
 const start = async () => {
   for (let index = urls.length - 1; index >= 0; index--) {
-    console.log(`Fetch第${index + 1}条, ${urls[index]}`);
-    const RMDownUrl = await getRMdownUrl(urls[index]);
+    const RMDownUrl = await getRMdownUrl(
+      `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${urls[index]}.html`
+    );
     const magnetUrl = await getMagnetUrl(RMDownUrl);
-    const data = fs.readFileSync("./urls/magnet.txt", "utf-8");
-    const downloaded = fs.readFileSync("./urls/downloaded.txt", "utf-8");
-    if (data.includes(magnetUrl)) {
-      console.log(`地址重复`);
-    } else if (downloaded.includes(magnetUrl)) {
-      console.log(`已下载`);
-    } else {
-      fs.writeFileSync("./urls/magnet.txt", `${data}\n${magnetUrl}`);
-      console.log(`Fetch成功,已写入`);
-    }
+    writeUrlToFilePath(magnetUrl, `./urls/magnet.txt`);
   }
-  console.log(`Fetch完毕,已结束`);
+  console.log(`Finished.`);
 };
 start();

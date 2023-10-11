@@ -39,7 +39,6 @@ const start = async () => {
     if (downloaded.includes(urls[index])) {
       console.log(`Downloaded, skipped.`);
     } else {
-      console.log(`Download image${index + 1}, ${urls[index]}`);
       const result = await downloadImg(urls[index]);
       console.log(result.message);
     }
