@@ -2,8 +2,6 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import { MAGNET_PREFIX, RM_DOWN_DOMAIN } from "./constant.js";
-import { sleep } from "./utils.js";
-const SLEEP_TIME = 3000;
 const urls = fs
   .readFileSync("./urls/fid2.txt", "utf-8")
   .split("\n")
@@ -39,7 +37,7 @@ const getMagnetUrl = (url) => {
 };
 const start = async () => {
   for (let index = urls.length - 1; index >= 0; index--) {
-    console.log(`获取第${index + 1}条, ${urls[index]}`);
+    console.log(`Fetch第${index + 1}条, ${urls[index]}`);
     const RMDownUrl = await getRMdownUrl(urls[index]);
     const magnetUrl = await getMagnetUrl(RMDownUrl);
     const data = fs.readFileSync("./urls/magnet.txt", "utf-8");
@@ -50,10 +48,9 @@ const start = async () => {
       console.log(`已下载`);
     } else {
       fs.writeFileSync("./urls/magnet.txt", `${data}\n${magnetUrl}`);
-      console.log(`获取成功,已写入`);
+      console.log(`Fetch成功,已写入`);
     }
-    sleep(SLEEP_TIME);
   }
-  console.log(`获取完毕,已结束`);
+  console.log(`Fetch完毕,已结束`);
 };
 start();

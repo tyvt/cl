@@ -1,6 +1,6 @@
 import { CL_DOMAIN } from "./constant.js";
-import { request, sleep, writeUrlToFilePath } from "./utils.js";
-const TOTAL_PAGES = 10; // 非会员最多抓100页
+import { request, writeUrlToFilePath } from "./utils.js";
+const TOTAL_PAGES = 100;
 const APPROVAL_SIZE = 20;
 const getCurrentPageURLs = (currentPage) => {
   const validURLs = [];
@@ -28,14 +28,13 @@ const getCurrentPageURLs = (currentPage) => {
 
 const start = async () => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    console.log(`获取第${page}页`);
+    console.log(`Fetch page${page}.`);
     const urls = await getCurrentPageURLs(page);
-    console.log(`获取到${urls.length}条`);
+    console.log(`Total ${urls.length}.`);
     urls.forEach((link) => {
       writeUrlToFilePath(link, `./urls/fid2.txt`);
     });
-    sleep();
   }
-  console.log(`获取完毕,已结束`);
+  console.log(`Finish.`);
 };
 start();

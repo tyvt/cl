@@ -12,6 +12,7 @@ export const request = (url) => {
           rawData += d.toString();
         });
         res.on("end", () => {
+          sleep();
           resolve(rawData);
         });
       })
@@ -21,9 +22,14 @@ export const request = (url) => {
   });
 };
 
-export const sleep = (millSeconds = 3000) => {
+const randomNum = (max, min) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const sleep = () => {
   let now = new Date();
-  const exitTime = now.getTime() + millSeconds;
+  const interval = randomNum(1200, 500);
+  const exitTime = now.getTime() + interval;
   while (true) {
     now = new Date();
     if (now.getTime() > exitTime) {

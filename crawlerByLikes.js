@@ -7,13 +7,12 @@ import {
   URL_REG,
   IMAGE_SUFFIX,
 } from "./constant.js";
-import { request, writeUrlToFilePath, sleep } from "./utils.js";
-const TOTAL_PAGES = 100; // 非会员最多抓100页
+import { request, writeUrlToFilePath } from "./utils.js";
+const TOTAL_PAGES = 100;
 const APPROVAL_LIKE = 0;
 
 const getUrlStart = async (category) => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    console.log(`获取第${page}页`);
     const html = await request(
       `${CL_DOMAIN}/thread0806.php?fid=${category.fid}&page=${page}`
     );
@@ -41,7 +40,6 @@ const getUrlStart = async (category) => {
         }
       }
     }
-    sleep();
   }
 };
 const getImageUrlStart = async (category) => {
@@ -51,7 +49,7 @@ const getImageUrlStart = async (category) => {
     .filter((e) => e);
   for (let index = urls.length - 1; index > 0; index--) {
     console.log(
-      `获取第${index + 1}条, ${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${
+      `Fetch image${index + 1}, ${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${
         urls[index]
       }.html`
     );
@@ -63,26 +61,24 @@ const getImageUrlStart = async (category) => {
     imgUrls.forEach((url) => {
       const matchUrl = url.match(URL_REG) || [];
       if (matchUrl.length && blackList.includes(new URL(matchUrl[0]).origin)) {
-        console.log(`域名在黑名单中, skipped.`);
+        console.log(`Invalid domain, skipped.`);
       } else if (!IMAGE_SUFFIX.some((e) => url.endsWith(e))) {
-        console.log(`格式不符合, skipped.`);
+        console.log(`Invalid format, skipped.`);
       } else {
         writeUrlToFilePath(url, `./urls/imgUrl.txt`);
       }
     });
-    sleep();
   }
-  console.log(`Finish.`);
 };
 
 for await (const category of CATEGORIES) {
-  console.log(`获取 ${category.description} 详情页开始`);
+  console.log(`Fetch ${category.description} begin.`);
   await getUrlStart(category);
-  console.log(`获取 ${category.description} 详情页结束`);
+  console.log(`Fetch ${category.description} end.`);
 }
 
 for await (const category of CATEGORIES) {
-  console.log(`获取 ${category.description} 图片地址开始`);
+  console.log(`Fetch ${category.description} begin.`);
   await getImageUrlStart(category);
-  console.log(`获取 ${category.description} 图片地址结束`);
+  console.log(`Fetch ${category.description} end.`);
 }
