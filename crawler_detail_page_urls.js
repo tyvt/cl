@@ -41,6 +41,5 @@ const getUrlStart = async (category) => {
 for await (const category of CATEGORIES) {
   console.log(`Fetch ${category.description} begin.`);
   await getUrlStart(category);
-  sleep(60 * 1000, 60 * 1000);
   console.log(`Fetch ${category.description} end.`);
 }
