@@ -14,10 +14,11 @@ const getImageUrlStart = async (category) => {
     .split("\n")
     .filter((e) => e);
   for (let index = urls.length - 1; index > 0; index--) {
-    const res = await request(
+    const { result, data } = await request(
       `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${urls[index]}.html`
     );
-    const imgUrls = res.match(/(?<=ess-data=')(.*?)(?=')/g) || [];
+    if (result == "error") return;
+    const imgUrls = data.match(/(?<=ess-data=')(.*?)(?=')/g) || [];
     const blackList = fs.readFileSync("./urls/blackList.txt", "utf-8");
     imgUrls.forEach((url) => {
       const matchUrl = url.match(URL_REG) || [];

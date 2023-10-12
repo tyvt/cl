@@ -6,15 +6,16 @@ const APPROVAL_LIKE = 0;
 
 const getUrlStart = async (category) => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
-    const html = await request(
+    const { result, data } = await request(
       `${CL_DOMAIN}/thread0806.php?fid=${category.fid}&page=${page}`
     );
-    const $ = load(html);
+    if (result == "error") return;
+    const $ = load(data);
     const domList = $("tr").children(".tal").children("h3").children("a");
     for (const iterator of domList) {
       if (iterator.children && iterator.children.length) {
-        const title = iterator.children[0].data || "";
-        console.log(title);
+        // const title = iterator.children[0].data || "";
+        // console.log(title);
         // const matchedArr = title.match(/\[\d{1,}[p|P]\]/g) || [];
         const likes = Number(
           $(`[id=${iterator.attribs.id}]`)
@@ -25,12 +26,13 @@ const getUrlStart = async (category) => {
             .text()
         );
         if (iterator.attribs.href.endsWith(".html") && likes >= APPROVAL_LIKE) {
-          writeUrlToFilePath(
+          const result = await writeUrlToFilePath(
             `${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
               .replace(".html", "")}`,
             `./urls/fid${category.fid}.txt`
           );
+          if (!result) return;
         }
       }
     }

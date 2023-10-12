@@ -16,8 +16,13 @@ export const request = (url) => {
             rawData += d.toString();
           });
           res.on("end", () => {
-            sleep();
-            resolve(rawData);
+            if (rawData.includes("403")) {
+              console.log(`IP restricted.`);
+              resolve({ result: "error", data: "" });
+            } else {
+              sleep();
+              resolve({ result: "success", data: rawData });
+            }
           });
         }
       )
@@ -45,13 +50,18 @@ const sleep = () => {
 };
 
 export const writeUrlToFilePath = (url, path) => {
-  const urls = fs
-    .readFileSync(path, "utf-8")
-    .split("\n")
-    .filter((e) => e);
-  if (!urls.includes(url)) {
-    urls.push(url);
-    fs.writeFileSync(path, urls.join("\n"));
-    console.log(`${url} Recorded.`);
-  }
+  return new Promise((resolve, reject) => {
+    const urls = fs
+      .readFileSync(path, "utf-8")
+      .split("\n")
+      .filter((e) => e);
+    if (urls.includes(url)) {
+      resolve(false);
+    } else {
+      urls.push(url);
+      fs.writeFileSync(path, urls.join("\n"));
+      console.log(`${url} Recorded.`);
+      resolve(true);
+    }
+  });
 };

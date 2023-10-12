@@ -11,10 +11,10 @@ const downloadImg = (url) => {
       resolve({ result: "fail", message: `Blocked domain, skipped.` });
     } else {
       request(url)
-        .then((res) => {
-          if (Number(res.length) / 1024 / 1024 >= 5) {
+        .then(({ result, data }) => {
+          if (Number(data.length) / 1024 / 1024 >= 5) {
             const fileName = url.split("/").at(-1).replace(/\r/, "");
-            fs.writeFileSync(`./images/${fileName}`, res, "binary");
+            fs.writeFileSync(`./images/${fileName}`, data, "binary");
             resolve({ result: "success", message: `Downloaded.` });
           } else {
             resolve({

@@ -6,9 +6,9 @@ const getCurrentPageURLs = (currentPage) => {
   const validURLs = [];
   return new Promise((resolve, reject) => {
     request(`${CL_DOMAIN}/thread0806.php?fid=2&page=${currentPage}`).then(
-      (res) => {
+      ({ result, data }) => {
         const rawArr =
-          res
+          data
             .match(/<h3><a\shref="htm_data\/.*.html".*?>\[.*?\]/g)
             ?.filter((e) => {
               const size = e.match(/(?<=\/)([0-9]+(.[0-9]{0,})?)(?=\G)/g);

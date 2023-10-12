@@ -13,16 +13,16 @@ const urls = fs
 const regExp = new RegExp(`(?<=href=")${RM_DOWN_DOMAIN}\\?hash=.*?(?=")`, "g");
 const getRMdownUrl = (url) => {
   return new Promise((resolve, reject) => {
-    request(url).then((res) => {
-      const resUrl = res.match(regExp)?.[0];
+    request(url).then(({ result, data }) => {
+      const resUrl = data.match(regExp)?.[0];
       resolve(resUrl);
     });
   });
 };
 const getMagnetUrl = (url) => {
   return new Promise((resolve, reject) => {
-    request(url).then((res) => {
-      const hashCode = res.match(/(?<=Code:\s)(.*?)(?=<\/span>)/g)?.[0];
+    request(url).then(({ result, data }) => {
+      const hashCode = data.match(/(?<=Code:\s)(.*?)(?=<\/span>)/g)?.[0];
       resolve(`${MAGNET_PREFIX}${hashCode}`);
     });
   });
