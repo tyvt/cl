@@ -49,9 +49,7 @@ export const writeUrlToFilePath = (url, path) => {
     .readFileSync(path, "utf-8")
     .split("\n")
     .filter((e) => e);
-  if (urls.includes(url)) {
-    console.log(`${url} Duplicate url, skipped.`);
-  } else {
+  if (!urls.includes(url)) {
     urls.push(url);
     fs.writeFileSync(path, urls.join("\n"));
     console.log(`${url} Recorded.`);

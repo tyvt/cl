@@ -13,7 +13,8 @@ const getUrlStart = async (category) => {
     const domList = $("tr").children(".tal").children("h3").children("a");
     for (const iterator of domList) {
       if (iterator.children && iterator.children.length) {
-        // const title = iterator.children[0].data || "";
+        const title = iterator.children[0].data || "";
+        console.log(title);
         // const matchedArr = title.match(/\[\d{1,}[p|P]\]/g) || [];
         const likes = Number(
           $(`[id=${iterator.attribs.id}]`)
