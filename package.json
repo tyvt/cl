@@ -1,11 +1,7 @@
 {
   "name": "cl_crawler",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
-  "scripts": {
-    "start": "node crawler_detail_urls.js && node crawler_image_urls.js"
-  },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "user-agents": "^1.0.1444"

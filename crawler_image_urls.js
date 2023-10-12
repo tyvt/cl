@@ -7,7 +7,7 @@ import {
   IMAGE_SUFFIX,
 } from "./constant.js";
 import { request, writeUrlToFilePath } from "./utils.js";
-
+console.log(process.argv.slice(2));
 const getImageUrlStart = async (category) => {
   const urls = fs
     .readFileSync(`./urls/fid${category.fid}.txt`, "utf-8")
@@ -32,10 +32,8 @@ const getImageUrlStart = async (category) => {
   }
 };
 
-const filterCategory = CATEGORIES.filter((e) => e.type == "image");
+const currentCategory = CATEGORIES[Number(process.argv.slice(2)[0])];
 
-for await (const category of filterCategory) {
-  console.log(`Fetch ${category.description} begin.`);
-  await getImageUrlStart(category);
-  console.log(`Fetch ${category.description} end.`);
-}
+console.log(`Fetch ${currentCategory.description} begin.`);
+await getImageUrlStart(currentCategory);
+console.log(`Fetch ${currentCategory.description} end.`);

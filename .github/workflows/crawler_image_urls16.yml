@@ -22,7 +22,7 @@ jobs:
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
           npm i
-          node crawler_image_urls.js
+          node crawler_image_urls.js 5
       - name: Commit
         run: |
           git config --global user.email example@example.com
