@@ -7,7 +7,6 @@ import {
   IMAGE_SUFFIX,
 } from "./constant.js";
 import { request, writeUrlToFilePath } from "./utils.js";
-console.log(process.argv.slice(2));
 const getImageUrlStart = async (category) => {
   const urls = fs
     .readFileSync(`./urls/fid${category.fid}.txt`, "utf-8")

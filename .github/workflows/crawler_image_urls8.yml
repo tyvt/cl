@@ -2,7 +2,7 @@ name: crawler fid8 image urls
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 19 * * *"
+    - cron: "0 19 * * 1"
 jobs:
   build:
     runs-on: ubuntu-latest

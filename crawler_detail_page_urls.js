@@ -1,6 +1,6 @@
 import { load } from "cheerio";
 import { CL_DOMAIN, CATEGORIES, DETAIL_PAGE_PREFIX } from "./constant.js";
-import { request, writeUrlToFilePath } from "./utils.js";
+import { request, writeUrlToFilePath, sleep } from "./utils.js";
 const TOTAL_PAGES = 100;
 const APPROVAL_LIKE = 0;
 
@@ -26,13 +26,12 @@ const getUrlStart = async (category) => {
             .text()
         );
         if (iterator.attribs.href.endsWith(".html") && likes >= APPROVAL_LIKE) {
-          const result = await writeUrlToFilePath(
+          writeUrlToFilePath(
             `${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
               .replace(".html", "")}`,
             `./urls/fid${category.fid}.txt`
           );
-          if (!result) return;
         }
       }
     }
@@ -42,5 +41,6 @@ const getUrlStart = async (category) => {
 for await (const category of CATEGORIES) {
   console.log(`Fetch ${category.description} begin.`);
   await getUrlStart(category);
+  sleep(60 * 1000, 60 * 1000);
   console.log(`Fetch ${category.description} end.`);
 }
