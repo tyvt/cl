@@ -1,8 +1,8 @@
-name: crawler detail page urls
+name: crawler fid16 image urls
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 16 * * *"
+    - cron: "0 21 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,13 +22,13 @@ jobs:
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
           npm i
-          node crawler_detail_page_urls.js
+          node crawler_image_urls.js
       - name: Commit
         run: |
           git config --global user.email example@example.com
           git config --global user.name example
           git add .
-          git commit -m"`date +'%Y-%m-%d'` crawler detail page urls"
+          git commit -m"`date +'%Y-%m-%d'` crawler fid16 image urls"
           git pull --rebase
 
       - name: Push changes
