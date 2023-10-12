@@ -20,19 +20,14 @@ export const request = (url, interval = 3000) => {
             rawData += d.toString();
           });
           res.on("end", () => {
-            if (rawData.includes("403")) {
-              console.log(`IP restricted.`, rawData);
-              resolve({ result: "error", data: "" });
-            } else {
-              sleep(interval);
-              resolve({ result: "success", data: rawData });
-            }
+            sleep(interval);
+            resolve({ result: "success", data: rawData });
           });
         }
       )
       .on("error", (e) => {
         console.log("error", e);
-        resolve("");
+        resolve({ result: "error", data: "" });
       });
   });
 };
