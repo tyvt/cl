@@ -2,6 +2,38 @@ import https from "https";
 import http from "http";
 import fs from "fs";
 import UserAgent from "user-agents";
+import initSqlJs from "sql.js";
+
+const getDB = async () => {
+  const DBBuffer = fs.readFileSync("./db/cl-crawler.sqlite");
+  const SQL = await initSqlJs();
+  const DB = new SQL.Database(DBBuffer);
+  return DB;
+};
+
+export const runSQL = async (sql) => {
+  const DB = await getDB();
+  const result = DB.exec(sql);
+  DB.close();
+  return result;
+};
+
+export const insertData = async (DBName, obj) => {
+  const DB = await getDB();
+  const sql = `INSERT OR IGNORE INTO ${DBName} (${Object.keys(
+    obj
+  ).join()}) VALUES (${Object.values(obj).join()})`;
+  console.log("sql: ", sql);
+  DB.run(sql);
+  await setDB(DB.export());
+  DB.close();
+};
+
+const setDB = async (arr) => {
+  const buffer = Buffer.from(arr);
+  fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
+};
+
 export const request = (url, interval = 3000) => {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http;

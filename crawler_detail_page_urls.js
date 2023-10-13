@@ -1,8 +1,7 @@
 import { load } from "cheerio";
 import { CL_DOMAIN, CATEGORIES, DETAIL_PAGE_PREFIX } from "./constant.js";
-import { request, writeUrlToFilePath, sleep } from "./utils.js";
+import { request, insertData } from "./utils.js";
 const TOTAL_PAGES = 100;
-const APPROVAL_LIKE = 0;
 
 const getUrlStart = async (category) => {
   for (let page = 1; page <= TOTAL_PAGES; page++) {
@@ -14,24 +13,17 @@ const getUrlStart = async (category) => {
     const domList = $("tr").children(".tal").children("h3").children("a");
     for (const iterator of domList) {
       if (iterator.children && iterator.children.length) {
-        // const title = iterator.children[0].data || "";
-        // console.log(title);
-        // const matchedArr = title.match(/\[\d{1,}[p|P]\]/g) || [];
-        const likes = Number(
-          $(`[id=${iterator.attribs.id}]`)
-            .parent()
-            .parent()
-            .prev()
-            .children(".s3")
-            .text()
-        );
-        if (iterator.attribs.href.endsWith(".html") && likes >= APPROVAL_LIKE) {
-          writeUrlToFilePath(
-            `${iterator.attribs.href
+        const name = iterator.children[0].data || "";
+        if (iterator.attribs.href.endsWith(".html") && name) {
+          await insertData("t_topic", {
+            name: `'${name}'`,
+            fid: category.fid,
+            url: `'${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
-              .replace(".html", "")}`,
-            `./urls/fid${category.fid}.txt`
-          );
+              .replace(".html", "")}'`,
+            create_time: Date.now(),
+            update_time: Date.now(),
+          });
         }
       }
     }
