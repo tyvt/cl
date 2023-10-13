@@ -16,11 +16,11 @@ const getUrlStart = async (category) => {
         const name = iterator.children[0].data || "";
         if (iterator.attribs.href.endsWith(".html") && name) {
           await insertData("t_topic", {
-            name: `'${name}'`,
+            name: `"${name}"`,
             fid: category.fid,
-            url: `'${iterator.attribs.href
+            url: `"${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
-              .replace(".html", "")}'`,
+              .replace(".html", "")}"`,
             create_time: Date.now(),
             update_time: Date.now(),
           });
