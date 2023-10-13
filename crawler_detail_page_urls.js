@@ -16,7 +16,7 @@ const getUrlStart = async (category) => {
         const name = iterator.children[0].data || "";
         if (iterator.attribs.href.endsWith(".html") && name) {
           await insertData("t_topic", {
-            name: `"${name}"`,
+            name: `"${name.replace(/\"/g, "'")}"`,
             fid: category.fid,
             url: `"${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
