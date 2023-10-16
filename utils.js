@@ -4,43 +4,59 @@ import fs from "fs";
 import UserAgent from "user-agents";
 import initSqlJs from "sql.js";
 
-const getDB = async () => {
-  const DBBuffer = fs.readFileSync("./db/cl-crawler.sqlite");
-  const SQL = await initSqlJs();
-  const DB = new SQL.Database(DBBuffer);
-  return DB;
-};
+export class TimerHelper {
+  constructor() {
+    this.startTime = Date.now();
+  }
+  getDuration() {
+    const endTime = Date.now();
+    return endTime - this.startTime;
+  }
+}
 
-export const runSQL = async (sql) => {
-  const DB = await getDB();
-  const result = DB.exec(sql);
-  DB.close();
-  return result;
-};
-
-export const insertData = async (DBName, obj) => {
-  const DB = await getDB();
-  const sql = `INSERT OR IGNORE INTO ${DBName} (${Object.keys(
-    obj
-  ).join()}) VALUES (${Object.values(obj).join()})`;
-  console.log("sql: ", sql);
-  DB.run(sql);
-  await setDB(DB.export());
-  DB.close();
-};
-
-const setDB = async (arr) => {
-  const buffer = Buffer.from(arr);
-  fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
-};
+export class DBHelper {
+  constructor(DBPath = "./db/cl-crawler.sqlite") {
+    this.DBBuffer = fs.readFileSync(DBPath);
+    this.DB = null;
+  }
+  async initDB() {
+    console.log("init DB");
+    const SQL = await initSqlJs();
+    this.DB = new SQL.Database(this.DBBuffer);
+  }
+  prepareData(tableName, obj) {
+    if (this.DB) {
+      const sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
+        obj
+      ).join()}) VALUES (${Object.values(obj).join()})`;
+      console.log(sql);
+      return this.DB.prepare(sql);
+    }
+  }
+  setDB = () => {
+    if (this.DB) {
+      const arr = this.DB.export();
+      this.DB.close();
+      const buffer = Buffer.from(arr);
+      fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
+      console.log(`Write DB success.`);
+    }
+  };
+  async runSQL(sql) {
+    if (this.DB) {
+      const result = this.DB.exec(sql);
+      return result;
+    }
+  }
+}
 
 export const request = (url, interval = 3000) => {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http;
     console.log(
-      `Fetch ${url}, time: ${new Date(
+      `Fetch ${url}, ${new Date(Date.now()).toLocaleDateString()} ${new Date(
         Date.now()
-      ).toLocaleDateString()} ${new Date(Date.now()).toLocaleTimeString()}`
+      ).toLocaleTimeString()}`
     );
     protocol
       .get(
