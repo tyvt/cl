@@ -1,15 +1,13 @@
 import { load } from "cheerio";
 import { CL_DOMAIN, CATEGORIES, DETAIL_PAGE_PREFIX } from "./constant.js";
-import { request, DBHelper, TimerHelper } from "./utils.js";
+import { request, DBHelper, TimerHelper, sleep } from "./utils.js";
 const TOTAL_PAGES = 100;
-const DB = new DBHelper();
-await DB.initDB();
 
-const getUrl = async (category, page) => {
+const getUrl = async (category, page, DB) => {
   const { result, data } = await request(
     `${CL_DOMAIN}/thread0806.php?fid=${category.fid}&page=${page}`
   );
-  if (result == "error") return;
+  if (result == "error") return false;
   const $ = load(data);
   const domList = $("tr").children(".tal").children("h3").children("a");
   const arr = [];
@@ -38,10 +36,16 @@ const getUrl = async (category, page) => {
 
 async function start() {
   for await (const category of CATEGORIES) {
+    const DB = new DBHelper();
+    await DB.initDB();
     console.log(`Fetch ${category.description} begin.`);
     const timer = new TimerHelper();
     for (let page = 1; page <= TOTAL_PAGES; page++) {
-      await getUrl(category, page);
+      await getUrl(category, page, DB);
+      if (page % 3 == 0) {
+        sleep(3000);
+      }
+      console.log(`Time duration ${timer.getDuration() / 1000}s`);
       if (timer.getDuration() / 1000 / 60 / 60 >= 5) {
         DB.setDB();
         return;

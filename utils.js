@@ -29,7 +29,6 @@ export class DBHelper {
       const sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
         obj
       ).join()}) VALUES (${Object.values(obj).join()})`;
-      console.log(sql);
       return this.DB.prepare(sql);
     }
   }
@@ -50,7 +49,7 @@ export class DBHelper {
   }
 }
 
-export const request = (url, interval = 3000) => {
+export const request = (url) => {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http;
     console.log(
@@ -68,7 +67,10 @@ export const request = (url, interval = 3000) => {
             rawData += d.toString();
           });
           res.on("end", () => {
-            sleep(interval);
+            if (rawData.includes("Forbidden")) {
+              console.log(rawData);
+              resolve({ result: "error", data: "403 Forbidden" });
+            }
             resolve({ result: "success", data: rawData });
           });
         }
