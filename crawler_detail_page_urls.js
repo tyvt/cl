@@ -35,6 +35,7 @@ const getUrl = async (category, page, DB) => {
 };
 
 async function start() {
+  const timerTotal = new TimerHelper();
   for await (const category of CATEGORIES) {
     const DB = new DBHelper();
     await DB.initDB();
@@ -42,9 +43,7 @@ async function start() {
     const timer = new TimerHelper();
     for (let page = 1; page <= TOTAL_PAGES; page++) {
       await getUrl(category, page, DB);
-      if (page % 3 == 0) {
-        sleep(3000);
-      }
+      sleep(2000);
       console.log(`Time duration ${timer.getDuration() / 1000}s`);
       if (timer.getDuration() / 1000 / 60 / 60 >= 5) {
         DB.setDB();
@@ -54,6 +53,7 @@ async function start() {
     DB.setDB();
     console.log(`Fetch ${category.description} end.`);
   }
+  console.log(`${timerTotal.getDuration() / 1000 / 60} mins`);
 }
 
 start();
