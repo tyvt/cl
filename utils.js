@@ -29,7 +29,7 @@ export class DBHelper {
       const sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
         obj
       ).join()}) VALUES (${Object.values(obj).join()})`;
-      return this.DB.prepare(sql);
+      this.runSQL(sql);
     }
   }
   setDB = () => {
@@ -37,9 +37,10 @@ export class DBHelper {
       const arr = this.DB.export();
       const buffer = Buffer.from(arr);
       fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
+      this.closeDb();
     }
   };
-  closeDB = () => {
+  closeDb = () => {
     if (this.DB) {
       this.DB.close();
     }

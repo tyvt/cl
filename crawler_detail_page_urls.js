@@ -15,24 +15,20 @@ const getUrl = async (fid, page, DB) => {
     if (iterator.children && iterator.children.length) {
       const name = iterator.children[0].data || "";
       if (iterator.attribs.href.endsWith(".html") && name) {
-        console.log(name);
-        arr.push(
-          DB.prepareData("t_topic", {
-            name: `"${name.replace(/\"/g, "'")}"`,
-            fid: fid,
-            url: `"${iterator.attribs.href
-              .replace(`${DETAIL_PAGE_PREFIX}`, "")
-              .replace(".html", "")}"`,
-            create_time: Date.now(),
-            update_time: Date.now(),
-          })
-        );
+        // console.log(name);
+        arr.push({
+          name: `"${name.replace(/\"/g, "'")}"`,
+          fid: fid,
+          url: `"${iterator.attribs.href
+            .replace(`${DETAIL_PAGE_PREFIX}`, "")
+            .replace(".html", "")}"`,
+          create_time: Date.now(),
+          update_time: Date.now(),
+        });
       }
     }
   }
-  arr.forEach((state) => {
-    state?.run();
-  });
+  return arr;
 };
 
 async function start() {
@@ -43,21 +39,27 @@ async function start() {
     DB.runSQL(
       `select * from t_channel tc where  (strftime('%s','now') * 1000  - update_time) / 1000 / 60 / 60 / 24 > 7`
     )?.[0].values.slice(0, 2) || [];
+  DB.closeDb();
+  const totalList = [];
   for await (const category of data) {
     console.log(`Fetch ${category[0]} begin.`);
     for (let page = 1; page <= TOTAL_PAGES; page++) {
-      await getUrl(category[1], page, DB);
-      DB.setDB();
+      const list = (await getUrl(category[1], page, DB)) || [];
+      totalList.push(...list);
       sleep(2000);
     }
+    await DB.initDB();
+    totalList.forEach((e) => {
+      DB.prepareData("t_topic", e);
+    });
     DB.runSQL(
       `update t_channel set update_time = "${Date.now()}" where fid = "${
         category[1]
       }"`
     );
+    DB.closeDb();
     console.log(`Fetch ${category[0]} end.`);
   }
-  DB.closeDB();
   console.log(`${timerTotal.getDuration() / 1000 / 60} mins`);
 }
 start();
