@@ -35,15 +35,19 @@ export class DBHelper {
   setDB = () => {
     if (this.DB) {
       const arr = this.DB.export();
-      this.DB.close();
       const buffer = Buffer.from(arr);
       fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
-      console.log(`Write DB success.`);
     }
   };
-  async runSQL(sql) {
+  closeDB = () => {
+    if (this.DB) {
+      this.DB.close();
+    }
+  };
+  runSQL(sql) {
     if (this.DB) {
       const result = this.DB.exec(sql);
+      this.setDB();
       return result;
     }
   }

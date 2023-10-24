@@ -1,11 +1,11 @@
 import { load } from "cheerio";
-import { CL_DOMAIN, CATEGORIES, DETAIL_PAGE_PREFIX } from "./constant.js";
+import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js";
 import { request, DBHelper, TimerHelper, sleep } from "./utils.js";
 const TOTAL_PAGES = 100;
 
-const getUrl = async (category, page, DB) => {
+const getUrl = async (fid, page, DB) => {
   const { result, data } = await request(
-    `${CL_DOMAIN}/thread0806.php?fid=${category.fid}&page=${page}`
+    `${CL_DOMAIN}/thread0806.php?fid=${fid}&page=${page}`
   );
   if (result == "error") return false;
   const $ = load(data);
@@ -15,10 +15,11 @@ const getUrl = async (category, page, DB) => {
     if (iterator.children && iterator.children.length) {
       const name = iterator.children[0].data || "";
       if (iterator.attribs.href.endsWith(".html") && name) {
+        console.log(name);
         arr.push(
           DB.prepareData("t_topic", {
             name: `"${name.replace(/\"/g, "'")}"`,
-            fid: category.fid,
+            fid: fid,
             url: `"${iterator.attribs.href
               .replace(`${DETAIL_PAGE_PREFIX}`, "")
               .replace(".html", "")}"`,
@@ -36,24 +37,27 @@ const getUrl = async (category, page, DB) => {
 
 async function start() {
   const timerTotal = new TimerHelper();
-  for await (const category of CATEGORIES) {
-    const DB = new DBHelper();
-    await DB.initDB();
-    console.log(`Fetch ${category.description} begin.`);
-    const timer = new TimerHelper();
+  const DB = new DBHelper();
+  await DB.initDB();
+  const data =
+    DB.runSQL(
+      `select * from t_channel tc where  (strftime('%s','now') * 1000  - update_time) / 1000 / 60 / 60 / 24 > 7`
+    )?.[0].values.slice(0, 2) || [];
+  for await (const category of data) {
+    console.log(`Fetch ${category[0]} begin.`);
     for (let page = 1; page <= TOTAL_PAGES; page++) {
-      await getUrl(category, page, DB);
+      await getUrl(category[1], page, DB);
+      DB.setDB();
       sleep(2000);
-      console.log(`Time duration ${timer.getDuration() / 1000}s`);
-      if (timer.getDuration() / 1000 / 60 / 60 >= 5) {
-        DB.setDB();
-        return;
-      }
     }
-    DB.setDB();
-    console.log(`Fetch ${category.description} end.`);
+    DB.runSQL(
+      `update t_channel set update_time = "${Date.now()}" where fid = "${
+        category[1]
+      }"`
+    );
+    console.log(`Fetch ${category[0]} end.`);
   }
+  DB.closeDB();
   console.log(`${timerTotal.getDuration() / 1000 / 60} mins`);
 }
-
 start();
