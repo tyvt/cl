@@ -15,42 +15,35 @@ export class TimerHelper {
 }
 
 export class DBHelper {
-  constructor(DBPath = "./db/cl-crawler.sqlite") {
-    this.DBBuffer = fs.readFileSync(DBPath);
-    this.DB = null;
-  }
+  constructor() {}
   async initDB() {
-    console.log("init DB");
+    this.DBBuffer = fs.readFileSync("./db/cl-crawler.sqlite");
     const SQL = await initSqlJs();
-    this.DB = new SQL.Database(this.DBBuffer);
+    console.log("init DB");
+    return new SQL.Database(this.DBBuffer);
   }
-  prepareData(tableName, obj) {
-    if (this.DB) {
-      const sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
-        obj
-      ).join()}) VALUES (${Object.values(obj).join()})`;
-      this.runSQL(sql);
-    }
+  async insert(tableName, arr) {
+    let sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
+      arr[0]
+    ).join()}) VALUES `;
+    const sqlArr = arr.map((e) => {
+      return `(${Object.values(e).join()})`;
+    });
+    sql = sql.concat(`${sqlArr.join(",")}`);
+    const timerTotal = new TimerHelper();
+    await this.runSQL(sql);
+    console.log(`${timerTotal.getDuration()}`);
   }
-  setDB = () => {
-    if (this.DB) {
-      const arr = this.DB.export();
+  async runSQL(sql) {
+    const DB = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const result = DB.exec(sql);
+      const arr = DB.export();
       const buffer = Buffer.from(arr);
       fs.writeFileSync("./db/cl-crawler.sqlite", buffer);
-      this.closeDb();
-    }
-  };
-  closeDb = () => {
-    if (this.DB) {
-      this.DB.close();
-    }
-  };
-  runSQL(sql) {
-    if (this.DB) {
-      const result = this.DB.exec(sql);
-      this.setDB();
-      return result;
-    }
+      DB.close();
+      resolve(result);
+    });
   }
 }
 
