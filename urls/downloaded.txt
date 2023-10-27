@@ -7,3 +7,4 @@ magnet:?xt=urn:btih:424883377c515bf8c6fa46c08a49c242f98b853e
 magnet:?xt=urn:btih:cf808bb10a889ff22b375e5958f131299930d894
 magnet:?xt=urn:btih:10b34760af49865a2e542799c2d078b19da0630a
 magnet:?xt=urn:btih:17491826045a358da289c79737b82e05b32656c5
+magnet:?xt=urn:btih:42a6e5f8f2de2b4cb769663f4468bf2f9fd250e7

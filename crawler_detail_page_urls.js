@@ -58,3 +58,16 @@ async function start() {
   console.log(`${timerTotal.getDuration() / 1000 / 60} mins`);
 }
 start();
+
+// const DB = new DBHelper();
+// const fid = "22";
+// for (let page = 97; page <= TOTAL_PAGES; page++) {
+//   const totalList = [];
+//   const list = (await getUrl(fid, page)) || [];
+//   totalList.push(...list);
+//   await DB.insert("t_topic", totalList);
+//   sleep(2000);
+// }
+// await DB.runSQL(
+//   `update t_channel set update_time = "${Date.now()}" where fid = "${fid}"`
+// );
