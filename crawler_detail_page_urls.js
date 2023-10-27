@@ -22,8 +22,8 @@ const getUrl = async (fid, page) => {
           url: `"${iterator.attribs.href
             .replace(`${DETAIL_PAGE_PREFIX}`, "")
             .replace(".html", "")}"`,
-          create_time: Date.now(),
-          update_time: Date.now(),
+          create_time: Math.round(new Date().getTime() / 1000),
+          update_time: Math.round(new Date().getTime() / 1000),
         });
       }
     }
@@ -69,5 +69,5 @@ start();
 //   sleep(2000);
 // }
 // await DB.runSQL(
-//   `update t_channel set update_time = "${Date.now()}" where fid = "${fid}"`
+//   `update t_channel set update_time = "${Math.round(new Date().getTime()/1000)}" where fid = "${fid}"`
 // );

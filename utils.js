@@ -19,7 +19,6 @@ export class DBHelper {
   async initDB() {
     this.DBBuffer = fs.readFileSync("./db/cl-crawler.sqlite");
     const SQL = await initSqlJs();
-    console.log("init DB");
     return new SQL.Database(this.DBBuffer);
   }
   async insert(tableName, arr) {
@@ -32,7 +31,6 @@ export class DBHelper {
     sql = sql.concat(`${sqlArr.join(",")}`);
     const timerTotal = new TimerHelper();
     await this.runSQL(sql);
-    console.log(`${timerTotal.getDuration()}`);
   }
   async runSQL(sql) {
     const DB = await this.initDB();
