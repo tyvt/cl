@@ -29,7 +29,6 @@ export class DBHelper {
       return `(${Object.values(e).join()})`;
     });
     sql = sql.concat(`${sqlArr.join(",")}`);
-    const timerTotal = new TimerHelper();
     await this.runSQL(sql);
   }
   async runSQL(sql) {

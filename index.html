@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./node_modules/sql.js/dist/sql-wasm.js"></script>
+  <script>
+    // Load sql.js WebAssembly file
+    let config = {
+      locateFile: () => "./node_modules/sql.js/dist/sql-wasm.wasm",
+    }
+    initSqlJs(config).then(function (SQL) {
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', "./db/cl-crawler.sqlite", true)
+      xhr.responseType = 'arraybuffer'
+      xhr.onload = e => {
+        const uInt8Array = new Uint8Array(xhr.response)
+        const db = new SQL.Database(uInt8Array)
+        const contents = db.exec(`SELECT * FROM t_channel tc`)
+        console.log('contents: ', contents)
+      }
+      xhr.send()
+    });
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
