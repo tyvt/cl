@@ -1,8 +1,12 @@
 import https from "https";
 import http from "http";
 import fs from "fs";
-import UserAgent from "user-agents";
-import initSqlJs from "sql.js";
+import UserAgent from "./packages/user-agents.cjs";
+import initSqlJs from "./packages/sql-wasm.cjs";
+import { exec } from "child_process";
+export function copyToClipboard(str) {
+  exec("clip").stdin?.end(str);
+}
 
 export class TimerHelper {
   constructor() {

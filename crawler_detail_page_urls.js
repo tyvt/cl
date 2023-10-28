@@ -1,5 +1,4 @@
-import { load } from "cheerio";
-import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js";
+import { CL_DOMAIN } from "./constant.js";
 import { request, DBHelper, TimerHelper, sleep } from "./utils.js";
 const TOTAL_PAGES = 100;
 
@@ -8,26 +7,19 @@ const getUrl = async (fid, page) => {
     `${CL_DOMAIN}/thread0806.php?fid=${fid}&page=${page}`
   );
   if (result == "error") return false;
-  const $ = load(data);
-  const domList = $("tr").children(".tal").children("h3").children("a");
+  const list = data.match(/<a href="htm_data\/.*">.*?<\/a>/g);
   const arr = [];
-  for (const iterator of domList) {
-    if (iterator.children && iterator.children.length) {
-      const name = iterator.children[0].data || "";
-      if (iterator.attribs.href.endsWith(".html") && name) {
-        // console.log(name);
-        arr.push({
-          name: `"${name.replace(/\"/g, "'")}"`,
-          fid: fid,
-          url: `"${iterator.attribs.href
-            .replace(`${DETAIL_PAGE_PREFIX}`, "")
-            .replace(".html", "")}"`,
-          create_time: Math.round(new Date().getTime() / 1000),
-          update_time: Math.round(new Date().getTime() / 1000),
-        });
-      }
-    }
-  }
+  list.forEach((element) => {
+    const name = element.match(/(?<=<a href="htm_data\/.*">).*?(?=<\/a>)/)[0];
+    const url = element.match(/(?<=href="htm_data)(.*?)(?=.html")/)[0];
+    arr.push({
+      name: `"${name.replace(/\"/g, "'")}"`,
+      fid: fid,
+      url: url,
+      create_time: Math.round(new Date().getTime() / 1000),
+      update_time: Math.round(new Date().getTime() / 1000),
+    });
+  });
   return arr;
 };
 
@@ -57,19 +49,19 @@ async function start() {
   });
   console.log(`${timerTotal.getDuration() / 1000 / 60} mins`);
 }
-// start();
+start();
 
-const DB = new DBHelper();
-const fid = "26";
-for (let page = 72; page <= TOTAL_PAGES; page++) {
-  const totalList = [];
-  const list = (await getUrl(fid, page)) || [];
-  totalList.push(...list);
-  await DB.insert("t_topic", totalList);
-  sleep(2000);
-}
-await DB.runSQL(
-  `update t_channel set update_time = "${Math.round(
-    new Date().getTime() / 1000
-  )}" where fid = "${fid}"`
-);
+// const DB = new DBHelper();
+// const fid = "26";
+// for (let page = 1; page <= TOTAL_PAGES; page++) {
+//   const totalList = [];
+//   const list = (await getUrl(fid, page)) || [];
+//   totalList.push(...list);
+//   await DB.insert("t_topic", totalList);
+//   sleep(2000);
+// }
+// await DB.runSQL(
+//   `update t_channel set update_time = "${Math.round(
+//     new Date().getTime() / 1000
+//   )}" where fid = "${fid}"`
+// );
