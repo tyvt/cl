@@ -1,4 +1,4 @@
-import { DBHelper, request, sleep, copyToClipboard } from "./utils.js";
+import { DBHelper, request, sleep } from "./utils.js";
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js";
 import fs from "fs";
 const start = async () => {
@@ -10,7 +10,6 @@ const start = async () => {
     for await (const iterator of list) {
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${iterator[2]}.html`;
       const { data } = await request(url);
-      copyToClipboard(data);
       const html = `<h3>${iterator[0]}</h3><br>${data
         .match(/<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/)[0]
         .replace(/ess-data/g, "src")
@@ -20,7 +19,7 @@ const start = async () => {
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "")}
         </div><br>`;
       fs.writeFileSync(
-        `./pages/${iterator[1]}/${iterator[2].split("/").at(-1)}.html`,
+        `./pages/${iterator[1]}/${iterator[2].split("/").at(-1)}.md`,
         html
       );
       await DB.runSQL(
