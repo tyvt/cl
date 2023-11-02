@@ -16,8 +16,14 @@ const start = async () => {
         sleep(2000);
         continue;
       }
-      const html = `<h3>${iterator[0]}</h3><br>${data
-        .match(/<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/)[0]
+      const matched = data.match(
+        /<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/
+      );
+      if (!matched) {
+        sleep(2000);
+        continue;
+      }
+      const html = `<h3>${iterator[0]}</h3><br>${matched[0]
         .replace(/ess-data/g, "src")
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
