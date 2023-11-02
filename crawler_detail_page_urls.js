@@ -29,7 +29,8 @@ async function start() {
   await DB.runSQL(
     `select * from t_channel tc where  (strftime('%s','now') - update_time) / 60 / 60 / 24 > 7`
   ).then(async (result) => {
-    const data = result?.[0].values.slice(0, 2) || [];
+    if (!result.length) return;
+    const data = result[0].values.slice(0, 2) || [];
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`);
       for (let page = 1; page <= TOTAL_PAGES; page++) {
