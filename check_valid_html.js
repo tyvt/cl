@@ -1,5 +1,5 @@
 import fs from "fs";
-const dir = `./pages/16/`;
+const dir = `./pages/8/`;
 const list = fs.readdirSync(dir);
 const whiteList = fs
   .readFileSync(`./urls/whiteList.txt`, "utf-8")

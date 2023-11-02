@@ -15,7 +15,7 @@ const getUrl = async (fid, page) => {
     arr.push({
       name: `"${name.replace(/\"/g, "'")}"`,
       fid: fid,
-      url: url,
+      url: `"${url}"`,
       create_time: Math.round(new Date().getTime() / 1000),
       update_time: Math.round(new Date().getTime() / 1000),
     });
