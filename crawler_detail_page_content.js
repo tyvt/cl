@@ -4,7 +4,7 @@ import fs from "fs";
 const start = async () => {
   const DB = new DBHelper();
   DB.runSQL(
-    `SELECT * FROM t_topic tt where create_time = update_time AND fid = "8"`
+    `SELECT * FROM t_topic tt where create_time = update_time AND fid = "7"`
   ).then(async (res) => {
     const list = res?.[0].values || [];
     for await (const iterator of list) {
