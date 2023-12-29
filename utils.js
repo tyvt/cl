@@ -26,6 +26,7 @@ export class DBHelper {
     return new SQL.Database(this.DBBuffer);
   }
   async insert(tableName, arr) {
+    if(!Array.isArray(arr)) return
     let sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
       arr[0]
     ).join()}) VALUES `;
