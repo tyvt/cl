@@ -14,8 +14,8 @@ for (let index = 0; index < 9999; index++) {
 }
 for await (const url of allUrls) {
   const { result, data } = await request(url)
-  console.log('data: ', data)
   if (result != "error" && data.includes('歡迎新會員')) {
+    console.log('data: ', data)
     validUrls.push(url)
   }
 }
