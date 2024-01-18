@@ -1,4 +1,4 @@
-name: crawler detail page urls
+name: crawler_latest_urls
 on:
   workflow_dispatch:
   schedule:
