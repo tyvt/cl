@@ -1,7 +1,7 @@
-export const CL_DOMAIN = "https://cl.3572y.xyz";
-export const DETAIL_PAGE_PREFIX = "htm_data";
-export const RM_DOWN_DOMAIN = "http://www.rmdown.com/link.php";
-export const MAGNET_PREFIX = "magnet:?xt=urn:btih:";
+export const CL_DOMAIN = "https://cl.9378x.xyz"
+export const DETAIL_PAGE_PREFIX = "htm_data"
+export const RM_DOWN_DOMAIN = "http://www.rmdown.com/link.php"
+export const MAGNET_PREFIX = "magnet:?xt=urn:btih:"
 
 export const CATEGORIES = [
   {
@@ -64,8 +64,8 @@ export const CATEGORIES = [
     description: "AI破解原創區",
     type: "video",
   },
-];
+]
 
-export const IMAGE_SUFFIX = ["jpg", "jpeg", "png"];
+export const IMAGE_SUFFIX = ["jpg", "jpeg", "png"]
 
-export const URL_REG = /(https|http):\/\/.*(?<!\?.*)/g;
+export const URL_REG = /(https|http):\/\/.*(?<!\?.*)/g
