@@ -1,4 +1,4 @@
-import { request, sleep } from "./utils.js"
+import { request } from "./utils.js"
 import fs from 'fs'
 const suffix = ['x', 'y', 'x']
 const allUrls = []
@@ -18,7 +18,6 @@ for await (const url of allUrls) {
   if (result != "error" && data.includes('歡迎新會員')) {
     validUrls.push(url)
   }
-  sleep(2000)
 }
 
 fs.writeFileSync('README.md', `<h1 align="center">1024社区域名列表</h1>\n\n${validUrls.map(e => `<${e}>`).join("\n")}`)
