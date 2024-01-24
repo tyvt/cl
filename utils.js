@@ -78,6 +78,32 @@ export const request = (url) => {
   })
 }
 
+export const post = (options, data) => {
+  return new Promise((resolve, reject) => {
+    const protocol = options.protocol == 'https:' ? https : http
+    const req = protocol
+      .request(
+        options,
+        (res) => {
+          const chunks = []
+          res.on("data", (chunk) => {
+            chunks.push(chunk)
+          })
+          res.on("end", () => {
+            const body = Buffer.concat(chunks)
+            resolve({ result: "success", data: body.toString() })
+          })
+        }
+      )
+      .on("error", (e) => {
+        console.log("error", e)
+        resolve({ result: "error", data: "" })
+      })
+    req.write(data)
+    req.end()
+  })
+}
+
 const randomNum = (max, min) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }

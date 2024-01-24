@@ -15,3 +15,5 @@ magnet:?xt=urn:btih:592157d8fa0c46444e2c4a1dea5b5efa78411afb
 magnet:?xt=urn:btih:f1b9ca8da4486366ba1a9c4af2eed63db0f17500
 magnet:?xt=urn:btih:2698ded97679b22af5a5f8fb53cb980270270eab
 magnet:?xt=urn:btih:c43ef23dfb736ee1ba071211356616f607a36fe0
+magnet:?xt=urn:btih:3747b1ed3dccb12394530d907d1d8f6f144f6e06
+magnet:?xt=urn:btih:918a1a3fde1bce40ca0210a436726b6b3dd19208
