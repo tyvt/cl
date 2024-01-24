@@ -8,6 +8,7 @@ today.setTime(new Date().getTime() + 24 * 60 * 60 * 1000)
 const tomorrow = today.getDate()
 request(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather => {
   const info = JSON.parse(weather.data).data.forecast.find(e => e.date == tomorrow)
+  console.log('info: ', info)
   request(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${app_id}&secret=${app_secret}`).then(res => {
     const token = JSON.parse(res.data)['access_token']
     const data = JSON.stringify({
@@ -48,7 +49,7 @@ request(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather 
       },
       'maxRedirects': 20
     }, data).then(res => {
-
+      console.log('res: ', res)
     })
   })
 })
