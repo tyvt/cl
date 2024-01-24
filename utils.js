@@ -49,7 +49,7 @@ export class DBHelper {
   }
 }
 
-export const request = (url) => {
+export const get = (url) => {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http
     console.log(

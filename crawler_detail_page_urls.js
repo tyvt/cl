@@ -1,9 +1,9 @@
 import { CL_DOMAIN } from "./constant.js"
-import { request, DBHelper, TimerHelper, sleep } from "./utils.js"
+import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 const TOTAL_PAGES = 100
 
 const getUrl = async (fid, page) => {
-  const { result, data } = await request(
+  const { result, data } = await get(
     `${CL_DOMAIN}/thread0806.php?fid=${fid}&page=${page}`
   )
   if (result == "error") return false

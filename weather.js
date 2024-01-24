@@ -1,4 +1,5 @@
-import { request, post } from "./utils.js"
+import { get } from "./utils.js"
+import request from 'request'
 const app_id = 'wxfa88e2a745f2212b'
 const app_secret = 'da51db7e5809d1c4083e9e4f2288b30f'
 const template_id = 'NFoTd6yd4ElC5tECOjhss0QAFgiy9okyUFxXZkt7cAk'
@@ -6,10 +7,9 @@ const city_id = '101190401'
 const today = new Date()
 today.setTime(new Date().getTime() + 24 * 60 * 60 * 1000)
 const tomorrow = today.getDate()
-request(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather => {
+get(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather => {
   const info = JSON.parse(weather.data).data.forecast.find(e => e.date == tomorrow)
-  console.log('info: ', info)
-  request(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${app_id}&secret=${app_secret}`).then(res => {
+  get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${app_id}&secret=${app_secret}`).then(res => {
     const token = JSON.parse(res.data)['access_token']
     const data = JSON.stringify({
       "touser": "o5Mgt67K0EyParamTUIyhKriBE3g",
@@ -39,17 +39,16 @@ request(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather 
         },
       }
     })
-    post({
-      protocol: 'https:',
-      host: 'api.weixin.qq.com',
-      path: `/cgi-bin/message/template/send?access_token=${token}`,
+    request({
+      url: `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${token}`,
       method: 'POST',
       'headers': {
         'Content-Type': 'application/json'
       },
-      'maxRedirects': 20
-    }, data).then(res => {
-      console.log('res: ', res)
+      body: data
+    }, (error, response) => {
+      if (error) throw new Error(error)
+      console.log(response.body)
     })
   })
 })

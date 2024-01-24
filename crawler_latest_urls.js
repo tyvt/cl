@@ -1,4 +1,4 @@
-import { request } from "./utils.js"
+import { get } from "./utils.js"
 import fs from 'fs'
 const suffix = ['x', 'y', 'x']
 const allUrls = []
@@ -13,7 +13,7 @@ for (let index = 0; index < 9999; index++) {
   })
 }
 for await (const url of allUrls) {
-  const { result, data } = await request(url)
+  const { result, data } = await get(url)
   if (result != "error" && data.includes('歡迎新會員')) {
     console.log('data: ', data)
     validUrls.push(url)
