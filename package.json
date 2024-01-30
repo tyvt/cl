@@ -1,8 +1,5 @@
 {
   "name": "cl",
   "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "request": "^2.88.2"
-  }
+  "type": "module"
 }

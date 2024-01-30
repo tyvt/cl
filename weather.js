@@ -1,5 +1,4 @@
-import { get } from "./utils.js"
-import request from 'request'
+import { get, request } from "./utils.js"
 const app_id = 'wxfa88e2a745f2212b'
 const app_secret = 'da51db7e5809d1c4083e9e4f2288b30f'
 const template_id = 'JWaJgToyeZaDsBXVJIvCl4AZe9KEQxLBfKPXbauGjM8'
@@ -10,7 +9,6 @@ today.setTime(new Date().getTime() + 24 * 60 * 60 * 1000)
 const tomorrow = today.getDate()
 get(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather => {
   const info = JSON.parse(weather.data).data.forecast.find(e => e.date == tomorrow)
-  console.log('info: ', info)
   get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${app_id}&secret=${app_secret}`).then(res => {
     const token = JSON.parse(res.data)['access_token']
     users.forEach(e => {
@@ -60,10 +58,8 @@ get(`http://t.weather.sojson.com/api/weather/city/${city_id}`).then(weather => {
         'headers': {
           'Content-Type': 'application/json'
         },
-        body: data
-      }, (error, response) => {
-        if (error) throw new Error(error)
-        console.log(response.body)
+      }, data).then(res => {
+        console.log('res: ', res)
       })
     })
   })

@@ -2,6 +2,7 @@ import https from "https"
 import http from "http"
 import fs from "fs"
 import UserAgent from "./packages/user-agents.cjs"
+// import { HttpsProxyAgent } from 'https-proxy-agent'
 import initSqlJs from "./packages/sql-wasm.cjs"
 import { exec } from "child_process"
 export function copyToClipboard(str) {
@@ -50,7 +51,31 @@ export class DBHelper {
   }
 }
 
-export const get = (url) => {
+async function getProxyIp() {
+  const res = await get(`http://demo.spiderpy.cn/get/?type=https`, { noProxy: true })
+  console.log('res: ', res)
+  if (JSON.parse(res.data).proxy) {
+    writeUrlToFilePath(
+      JSON.parse(res.data).proxy,
+      `./urls/proxy.txt`
+    )
+  }
+  return '140.249.88.236:80'
+}
+
+export const get = async (url, config) => {
+  const requestConfig = {
+    headers: {
+      "user-agent": new UserAgent().toString(),
+    }
+  }
+  // if (Boolean(config?.noProxy) === false) {
+  //   const proxy = await getProxyIp()
+  //   console.log('proxy: ', proxy)
+  //   if (proxy) {
+  //     requestConfig.agent = new HttpsProxyAgent(`http://${proxy}`)
+  //   }
+  // }
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http
     console.log(
@@ -61,15 +86,21 @@ export const get = (url) => {
     protocol
       .get(
         url,
-        { headers: { "User-Agent": new UserAgent().toString() } },
+        requestConfig,
         (res) => {
-          let rawData = ""
-          res.on("data", (d) => {
-            rawData += d.toString()
-          })
-          res.on("end", () => {
-            resolve({ result: "success", data: rawData })
-          })
+          console.log('statusCode: ', res.statusCode)
+          if (res.statusCode == '302') {
+            console.log('res: ', res)
+            // get(url, requestConfig)
+          } else {
+            let rawData = ""
+            res.on("data", (d) => {
+              rawData += d.toString()
+            })
+            res.on("end", () => {
+              resolve({ result: "success", data: rawData })
+            })
+          }
         }
       )
       .on("error", (e) => {
@@ -79,9 +110,17 @@ export const get = (url) => {
   })
 }
 
-export const post = (options, data) => {
+export const request = (options, data) => {
+  const url = new URL(options.url)
+  options.hostname = url.host
+  options.path = url.pathname + url.search
+  options.headers = {
+    "Content-Type": "application/json",
+    "content-length": Buffer.byteLength(data)
+  }
+  delete options.url
   return new Promise((resolve, reject) => {
-    const protocol = options.protocol == 'https:' ? https : http
+    const protocol = url.protocol == 'https:' ? https : http
     const req = protocol
       .request(
         options,
