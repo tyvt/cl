@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CL</title>
-  <script type="module" src="/packages/content.js"></script>
   <script type="module">
-    import cl from './urls/cl.json' assert { type: 'json' }
-    cl.url.forEach(element => {
+    import cl from './urls/cl.js'
+    cl.forEach(element => {
       const a = document.createElement('a')
       a.href = element
       a.innerText = element
@@ -26,27 +25,16 @@
     .list {
       display: flex;
       flex-direction: column;
+      background-color: black;
+      width: 100vw;
+      height: 100vh;
     }
   </style>
 </head>
 
 <body>
   <div class="list">
-    <!-- <a href="2">亞洲無碼原創區</a>
-    <a href="5">動漫原創區</a>
-    <a href="7">技術討論區</a>
-    <a href="8">新時代的我們</a>
-    <a href="15">亞洲有碼原創區</a>
-    <a href="16">達蓋爾的旗幟</a>
-    <a href="20">成人文學交流區</a>
-    <a href="21">HTTP下載區</a>
-    <a href="22">在綫成人影院</a>
-    <a href="25">國產原創區</a>
-    <a href="26">中字原創區</a>
-    <a href="28">AI破解原創區</a> -->
   </div>
-
-  <!-- <content-container path="/pages/2/5910955.html"></content-container> -->
 </body>
 
 </html>

@@ -20,4 +20,4 @@ for await (const url of allUrls) {
 }
 
 fs.writeFileSync('README.md', `<h1 align="center">1024社区域名列表</h1>\n\n${validUrls.map(e => `<${e}>`).join("\n")}`)
-fs.writeFileSync('./url/cl.json', `{"url": ${validUrls}}`)
+fs.writeFileSync('./url/cl.js', `export default [${validUrls}]`)
