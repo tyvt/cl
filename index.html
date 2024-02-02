@@ -7,6 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CL</title>
   <script type="module" src="/packages/content.js"></script>
+  <script type="module">
+    import cl from './urls/cl.json' assert { type: 'json' }
+    cl.url.forEach(element => {
+      const a = document.createElement('a')
+      a.href = element
+      a.innerText = element
+      a.target = '_blank'
+      document.querySelector('.list').appendChild(a)
+    });
+  </script>
   <style>
     * {
       box-sizing: border-box;
