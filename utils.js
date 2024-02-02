@@ -91,6 +91,7 @@ export const get = async (url, config) => {
           console.log('statusCode: ', res.statusCode)
           if (res.statusCode == '302') {
             console.log('res: ', res)
+            resolve({ result: "error", data: res })
             // get(url, requestConfig)
           } else {
             let rawData = ""
