@@ -9,7 +9,7 @@ for (let index = 0; index < 9999; index++) {
     temp = [...new Array(4 - temp.split('').length).fill(0), ...temp.split('')].join('')
   }
   suffix.forEach(e => {
-    allUrls.push(`https://cl.${temp}${e}.xyz/index.php`)
+    allUrls.push(`https://cl.${temp}${e}.xyz/mobile.php?ismobile=yes`)
   })
 }
 for await (const url of allUrls) {
