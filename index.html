@@ -9,11 +9,12 @@
   <script type="module">
     import cl from './urls/cl.js'
     cl.forEach(element => {
-      const a = document.createElement('a')
-      a.href = element
-      a.innerText = element
-      a.target = '_blank'
-      document.querySelector('.list').appendChild(a)
+      const span = document.createElement('span')
+      span.innerText = element.split('?')[0]
+      span.addEventListener('click', () => {
+        window.location.href = element
+      })
+      document.querySelector('.list').appendChild(span)
     });
   </script>
   <style>
@@ -25,6 +26,12 @@
     .list {
       display: flex;
       flex-direction: column;
+    }
+
+    span {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
     }
   </style>
 </head>
