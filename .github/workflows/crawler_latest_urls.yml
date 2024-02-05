@@ -27,7 +27,7 @@ jobs:
           git config --global user.email example@example.com
           git config --global user.name example
           git add .
-          git commit -m"`date +'%Y-%m-%d'` crawler latest urls"
+          git commit -m"`date +'%Y-%m-%d'` crawler latest urls" --allow-empty
           git pull --rebase
 
       - name: Push changes
