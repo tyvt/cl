@@ -29,7 +29,7 @@ const start = async () => {
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
         .replace(/\sdata-link='.*?'/g, "")
-        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s/g, '')}
+        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
         </div><br>`
       arr.push({
         fid: `"${iterator[1]}"`,
