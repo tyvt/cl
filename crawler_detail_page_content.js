@@ -14,14 +14,14 @@ const start = async () => {
       // copyToClipboard(data);
       if (data.includes(`無法找到頁面`)) {
         await DB.runSQL(`delete from t_topic where url = "${iterator[2]}"`)
-        sleep(2000)
+        sleep(2500)
         continue
       }
       const matched = data.match(
         /<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/
       )
       if (!matched) {
-        sleep(2000)
+        sleep(2500)
         continue
       }
       const html = `${matched[0]
@@ -36,7 +36,7 @@ const start = async () => {
         url: `"${iterator[2]}"`,
         content: `"${html}"`,
       })
-      sleep(2000)
+      sleep(2500)
     }
     await DB.insert("t_content", arr)
   })
