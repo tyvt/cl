@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CL</title>
-  <script src="./packages/sql-wasm.cjs"></script>
+  <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
   <script type="module">
     import { DB_DOMAIN } from './constant.js'
     const query = new URLSearchParams(location.search)
     const url = query.get('url')
     let config = {
-      locateFile: () => "./packages/sql-wasm.wasm",
+      locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
     }
     initSqlJs(config).then(function (SQL) {
       const xhr = new XMLHttpRequest()
