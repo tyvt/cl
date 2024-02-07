@@ -32,12 +32,13 @@ const start = async () => {
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "")}
         </div><br>`
       arr.push({
-        fid: `"${iterator[1]}"`,
-        url: `"${iterator[2]}"`,
-        content: `"${html}"`,
+        fid: `'${iterator[1]}'`,
+        url: `'${iterator[2]}'`,
+        content: `'${html}'`,
       })
       sleep(2000)
     }
+    console.log('arr: ', arr)
     await DB.insert("t_content", arr)
   })
 }
