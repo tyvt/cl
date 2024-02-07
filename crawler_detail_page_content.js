@@ -5,7 +5,7 @@ const start = async () => {
   const arr = []
   const DB = new DBHelper()
   DB.runSQL(
-    `SELECT * FROM t_topic tt WHERE fid = "7" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 10`
+    `SELECT * FROM t_topic tt WHERE fid = "7" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 100`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -38,7 +38,6 @@ const start = async () => {
       })
       sleep(2000)
     }
-    console.log('arr: ', arr)
     await DB.insert("t_content", arr)
   })
 }
