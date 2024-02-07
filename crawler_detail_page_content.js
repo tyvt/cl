@@ -5,7 +5,7 @@ const start = async () => {
   const arr = []
   const DB = new DBHelper()
   DB.runSQL(
-    `SELECT * FROM t_topic tt WHERE fid = "7" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 100`
+    `SELECT * FROM t_topic tt WHERE fid = "7" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 10`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -24,12 +24,12 @@ const start = async () => {
         sleep(2000)
         continue
       }
-      const html = `<h3>${iterator[0].replace(/\"/g, "'")}</h3><br>${matched[0]
+      const html = `${matched[0]
         .replace(/ess-data/g, "src")
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
         .replace(/\sdata-link='.*?'/g, "")
-        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'")}
+        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s/g, '')}
         </div><br>`
       arr.push({
         fid: `"${iterator[1]}"`,
