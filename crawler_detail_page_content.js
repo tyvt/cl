@@ -24,17 +24,17 @@ const start = async () => {
         sleep(2000)
         continue
       }
-      const html = `<h3>${iterator[0]}</h3><br>${matched[0]
+      const html = `<h3>${iterator[0].replace(/\"/g, "'")}</h3><br>${matched[0]
         .replace(/ess-data/g, "src")
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
         .replace(/\sdata-link='.*?'/g, "")
-        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "")}
+        .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'")}
         </div><br>`
       arr.push({
-        fid: `'${iterator[1]}'`,
-        url: `'${iterator[2]}'`,
-        content: `'${html}'`,
+        fid: `"${iterator[1]}"`,
+        url: `"${iterator[2]}"`,
+        content: `"${html}"`,
       })
       sleep(2000)
     }
