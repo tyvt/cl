@@ -20,7 +20,7 @@
         const db = new SQL.Database(uInt8Array)
         const contents = db.exec(`SELECT * FROM t_channel tc`)
         contents[0].values.forEach(e => {
-          const count = db.exec(`SELECT COUNT(*) FROM t_topic where fid = ${e[1]}`)[0].values[0][0]
+          const count = db.exec(`SELECT COUNT(*) FROM t_content where fid = ${e[1]}`)[0].values[0][0]
           const a = document.createElement('a')
           a.innerText = `${e[0]}(${count})`
           a.href = `./list.html?fid=${e[1]}&page=1`

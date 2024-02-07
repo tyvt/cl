@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CL</title>
+  <script src="./packages/sql-wasm.cjs"></script>
+  <script>
+    const query = new URLSearchParams(location.search)
+    const url = query.get('url')
+    let config = {
+      locateFile: () => "./packages/sql-wasm.wasm",
+    }
+    initSqlJs(config).then(function (SQL) {
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', "./db/cl-crawler.sqlite", true)
+      xhr.responseType = 'arraybuffer'
+      xhr.onload = e => {
+        const uInt8Array = new Uint8Array(xhr.response)
+        const db = new SQL.Database(uInt8Array)
+        const contents = db.exec(`SELECT content FROM t_content tc WHERE url = "${url}"`)
+        contents[0].values.forEach(e => {
+          document.body.innerHTML = e[0]
+        })
+      }
+      xhr.send()
+    });
+  </script>
+  <style>
+  </style>
+</head>
+
+<body>
+</body>
+
+</html>
