@@ -32,7 +32,7 @@ export class DBHelper {
     let sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
       arr[0]
     ).join()}) VALUES `
-    const sqlArr = arr.slice(0, 2).map((e) => {
+    const sqlArr = arr.map((e) => {
       return `(${Object.values(e).join()})`
     })
     sql = sql.concat(`${sqlArr.join(",")}`)
