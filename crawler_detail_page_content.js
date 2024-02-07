@@ -2,9 +2,10 @@ import { DBHelper, get, sleep, copyToClipboard } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js"
 import fs from "fs"
 const start = async () => {
+  const arr = []
   const DB = new DBHelper()
   DB.runSQL(
-    `SELECT * FROM t_topic tt where create_time = update_time AND fid = "7" LIMIT 500 `
+    `SELECT * FROM t_topic tt WHERE fid = "7" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 5`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -30,17 +31,14 @@ const start = async () => {
         .replace(/\sdata-link='.*?'/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "")}
         </div><br>`
-      fs.writeFileSync(
-        `./pages/${iterator[1]}/${iterator[2].split("/").at(-1)}.html`,
-        html
-      )
-      await DB.runSQL(
-        `update t_topic set update_time = "${Math.round(
-          new Date().getTime() / 1000
-        )}" where url = "${iterator[2]}"`
-      )
+      arr.push({
+        fid: `"${iterator[1]}"`,
+        url: `"${iterator[2]}"`,
+        content: `"${html}"`,
+      })
       sleep(2000)
     }
+    await DB.insert("t_content", arr)
   })
 }
 

@@ -8,6 +8,9 @@
   <title>CL</title>
   <script src="./packages/sql-wasm.cjs"></script>
   <script>
+    const query = new URLSearchParams(location.search)
+    const fid = query.get('fid')
+    const page = query.get('page')
     let config = {
       locateFile: () => "./packages/sql-wasm.wasm",
     }
@@ -18,12 +21,10 @@
       xhr.onload = e => {
         const uInt8Array = new Uint8Array(xhr.response)
         const db = new SQL.Database(uInt8Array)
-        const contents = db.exec(`SELECT * FROM t_channel tc`)
+        const contents = db.exec(`SELECT * FROM t_topic tp WHERE fid = ${fid} LIMIT 100`)
         contents[0].values.forEach(e => {
-          const count = db.exec(`SELECT COUNT(*) FROM t_topic where fid = ${e[1]}`)[0].values[0][0]
           const a = document.createElement('a')
-          a.innerText = `${e[0]}(${count})`
-          a.href = `./list.html?fid=${e[1]}&page=1`
+          a.innerHTML = e[0]
           document.body.appendChild(a)
         })
       }
