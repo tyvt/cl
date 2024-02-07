@@ -69,3 +69,7 @@ export const CATEGORIES = [
 export const IMAGE_SUFFIX = ["jpg", "jpeg", "png"]
 
 export const URL_REG = /(https|http):\/\/.*(?<!\?.*)/g
+
+const domain = 'zhi' + 'shu' + 'sz'
+
+export const DB_DOMAIN = `http://www.${domain}.com/assets/cl-crawler.sqlite`

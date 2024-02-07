@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CL</title>
   <script src="./packages/sql-wasm.cjs"></script>
-  <script>
+  <script type="module">
+    import { DB_DOMAIN } from './constant.js'
     let config = {
       locateFile: () => "./packages/sql-wasm.wasm",
     }
     initSqlJs(config).then(function (SQL) {
       const xhr = new XMLHttpRequest()
-      xhr.open('GET', "./db/cl-crawler.sqlite", true)
+      xhr.open('GET', DB_DOMAIN, true)
       xhr.responseType = 'arraybuffer'
       xhr.onload = e => {
         const uInt8Array = new Uint8Array(xhr.response)
