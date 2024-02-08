@@ -29,19 +29,24 @@ export class DBHelper {
   async insert(tableName, arr) {
     if (!Array.isArray(arr)) return
     if (!arr.length) return
-    let sql = `INSERT OR IGNORE INTO ${tableName} (${Object.keys(
-      arr[0]
-    ).join()}) VALUES `
-    const sqlArr = arr.map((e) => {
-      return `(${Object.values(e).join()})`
+    let sql = `INSERT OR IGNORE INTO ${tableName} VALUES (${Object.keys(arr[0]).map(e => `$${e}`).join()})`
+    const DB = await this.initDB()
+    arr.forEach(e => {
+      const obj = {}
+      Object.keys(e).forEach(k => {
+        obj[`$${k}`] = e[k]
+      })
+      DB.exec(sql, obj)
     })
-    sql = sql.concat(`${sqlArr.join(",")}`)
-    await this.runSQL(sql)
+    const result = DB.export()
+    const buffer = Buffer.from(result)
+    fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
+    DB.close()
   }
-  async runSQL(sql) {
+  async runSQL(sql, options) {
     const DB = await this.initDB()
     return new Promise((resolve, reject) => {
-      const result = DB.exec(sql)
+      const result = DB.exec(sql, options)
       const arr = DB.export()
       const buffer = Buffer.from(arr)
       fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
