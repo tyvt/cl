@@ -19,15 +19,16 @@
       xhr.open('GET', "https://unpkg.com/regexp-bundles@0.4.0/dist/cl-crawler.sqlite", true)
       xhr.responseType = 'arraybuffer'
       xhr.onload = e => {
-        const uInt8Array = new Uint8Array(xhr.response)
-        const db = new SQL.Database(uInt8Array)
+        const db = new SQL.Database(new Uint8Array(xhr.response))
         const contents = db.exec(`SELECT * FROM t_topic tp WHERE fid = ${fid} AND EXISTS(SELECT * FROM t_content tc WHERE tp.url=tc.url)`)
+        const fragment = document.createDocumentFragment()
         contents[0].values.forEach(e => {
           const a = document.createElement('a')
           a.innerHTML = e[0]
           a.href = `./detail.html?url=${e[2]}`
-          document.body.appendChild(a)
+          fragment.appendChild(a)
         })
+        document.body.appendChild(fragment)
       }
       xhr.send()
     });

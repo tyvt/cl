@@ -16,16 +16,16 @@
       xhr.open('GET', "https://unpkg.com/regexp-bundles@0.4.0/dist/cl-crawler.sqlite", true)
       xhr.responseType = 'arraybuffer'
       xhr.onload = e => {
-        const uInt8Array = new Uint8Array(xhr.response)
-        const db = new SQL.Database(uInt8Array)
-        const contents = db.exec(`SELECT * FROM t_channel tc`)
+        const db = new SQL.Database(new Uint8Array(xhr.response))
+        const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content where fid = tc.fid) AS count FROM t_channel tc`)
+        const fragment = document.createDocumentFragment()
         contents[0].values.forEach(e => {
-          const count = db.exec(`SELECT COUNT(*) FROM t_content where fid = ${e[1]}`)[0].values[0][0]
           const a = document.createElement('a')
-          a.innerText = `${e[0]}(${count})`
+          a.innerText = `${e[0]}(${e[2]})`
           a.href = `./list.html?fid=${e[1]}&page=1`
-          document.body.appendChild(a)
+          fragment.appendChild(a)
         })
+        document.body.appendChild(fragment)
       }
       xhr.send()
     });

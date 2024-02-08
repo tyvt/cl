@@ -18,8 +18,7 @@
       xhr.open('GET', "https://unpkg.com/regexp-bundles@0.4.0/dist/cl-crawler.sqlite", true)
       xhr.responseType = 'arraybuffer'
       xhr.onload = e => {
-        const uInt8Array = new Uint8Array(xhr.response)
-        const db = new SQL.Database(uInt8Array)
+        const db = new SQL.Database(new Uint8Array(xhr.response))
         const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
         const contents = db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
         contents[0].values.forEach(e => {
