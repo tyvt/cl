@@ -43,6 +43,19 @@ export class DBHelper {
     fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
     DB.close()
   }
+  async update(tableName, data, condition) {
+    let sql = `UPDATE ${tableName} SET ${Object.keys(data).map(e => `${e}=$${e}`).join()} where ${condition}`
+    const DB = await this.initDB()
+    const obj = {}
+    Object.keys(data).forEach(k => {
+      obj[`$${k}`] = data[k]
+    })
+    DB.exec(sql, obj)
+    const result = DB.export()
+    const buffer = Buffer.from(result)
+    fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
+    DB.close()
+  }
   async runSQL(sql, options) {
     const DB = await this.initDB()
     return new Promise((resolve, reject) => {
