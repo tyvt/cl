@@ -12,7 +12,7 @@ DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 10').then
     const name = data.match(/<h4 class="f16">.*?<\/h4>/)[0]
     console.log('name: ', name)
     await DB.runSQL(
-      `update t_topic set name = "${name}" where url = "${topic[2]}"`
+      `update t_topic set name = "${`"${name.replace(/\"/g, "'")}"`}" where url = "${topic[2]}"`
     )
   }
 })
