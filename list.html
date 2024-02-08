@@ -16,7 +16,7 @@
     }
     initSqlJs(config).then(function (SQL) {
       const xhr = new XMLHttpRequest()
-      xhr.open('GET', "https://unpkg.com/regexp-bundles@0.4.0/dist/cl-crawler.sqlite", true)
+      xhr.open('GET', "https://unpkg.com/cl-lite@1.0.0/dist/cl-crawler.sqlite", true)
       xhr.responseType = 'arraybuffer'
       xhr.onload = e => {
         const db = new SQL.Database(new Uint8Array(xhr.response))
