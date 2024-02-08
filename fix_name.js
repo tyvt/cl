@@ -9,7 +9,7 @@ DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 10').then
     const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[2]}.html`
     console.log('url: ', url)
     const { data } = await get(url)
-    const name = data.match(/<h4 class="f16">.*?<\/h4></h4 > /)[0]
+    const name = data.match(/<h4 class="f16">.*?<\/h4>/)[0]
     console.log('name: ', name)
     await DB.runSQL(
       `update t_topic set name = "${name}" where url = "${topic[2]}"`
