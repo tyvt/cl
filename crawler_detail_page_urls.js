@@ -1,6 +1,6 @@
 import { CL_DOMAIN } from "./constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
-const TOTAL_PAGES = 100
+const TOTAL_PAGES = 6
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
@@ -16,8 +16,6 @@ const getUrl = async (fid, page) => {
       name: `"${name.replace(/\"/g, "'")}"`,
       fid: fid,
       url: `"${url}"`,
-      create_time: Math.round(new Date().getTime() / 1000),
-      update_time: Math.round(new Date().getTime() / 1000),
     })
   })
   return arr
@@ -27,10 +25,10 @@ async function start() {
   const timerTotal = new TimerHelper()
   const DB = new DBHelper()
   await DB.runSQL(
-    `select * from t_channel tc where  (strftime('%s','now') - update_time) / 60 / 60 / 24 > 7`
+    `select * from t_channel tc`
   ).then(async (result) => {
     if (!result.length) return
-    const data = result[0].values.slice(0, 2) || []
+    const data = result[0].values || []
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
       for (let page = 1; page <= TOTAL_PAGES; page++) {
@@ -51,18 +49,3 @@ async function start() {
   console.log(`${timerTotal.getDuration() / 1000 / 60} mins`)
 }
 start()
-
-// const DB = new DBHelper();
-// const fid = "26";
-// for (let page = 1; page <= TOTAL_PAGES; page++) {
-//   const totalList = [];
-//   const list = (await getUrl(fid, page)) || [];
-//   totalList.push(...list);
-//   await DB.insert("t_topic", totalList);
-//   sleep(2000);
-// }
-// await DB.runSQL(
-//   `update t_channel set update_time = "${Math.round(
-//     new Date().getTime() / 1000
-//   )}" where fid = "${fid}"`
-// );

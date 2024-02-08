@@ -22,7 +22,6 @@ jobs:
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
           node crawler_detail_page_content.js
-          node clean_invalid_html.js
       - name: Commit
         run: |
           git config --global user.email example@example.com
