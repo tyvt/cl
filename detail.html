@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CL</title>
+  <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
+
+  <script>
+    var jsonXhr = new XMLHttpRequest()
+    jsonXhr.open("GET", './package.json', true)
+    jsonXhr.onreadystatechange = function () {
+      if (jsonXhr.readyState == 4 && jsonXhr.status == 200) {
+        const query = new URLSearchParams(location.search)
+        const url = query.get('url')
+        let config = {
+          locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
+        }
+        initSqlJs(config).then(function (SQL) {
+          const xhr = new XMLHttpRequest()
+          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-crawler.sqlite`, true)
+          xhr.responseType = 'arraybuffer'
+          xhr.onload = e => {
+            const db = new SQL.Database(new Uint8Array(xhr.response))
+            const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
+            const contents = db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
+            contents[0].values.forEach(e => {
+              document.body.innerHTML = `<h3>${title}</h3><br>${e[0]}`
+            })
+          }
+          xhr.send()
+        })
+      }
+    }
+    jsonXhr.send()
+
+  </script>
+  <style>
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+
+</html>
