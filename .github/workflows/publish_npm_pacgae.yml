@@ -1,6 +1,8 @@
 name: Publish Package to npmjs
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 17 * * *"
   push:
     branches:
       - master
