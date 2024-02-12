@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CL</title>
+  <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
+  <script>
+    var jsonXhr = new XMLHttpRequest()
+    jsonXhr.open("GET", './package.json', true)
+    jsonXhr.onreadystatechange = function () {
+      if (jsonXhr.readyState == 4 && jsonXhr.status == 200) {
+        const query = new URLSearchParams(location.search)
+        const fid = query.get('fid')
+        const page = query.get('page')
+        let config = {
+          locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
+        }
+        initSqlJs(config).then(function (SQL) {
+          const xhr = new XMLHttpRequest()
+          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-crawler.sqlite`, true)
+          xhr.responseType = 'arraybuffer'
+          xhr.onload = e => {
+            const db = new SQL.Database(new Uint8Array(xhr.response))
+            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content where fid = tc.fid) AS count FROM t_channel tc`)
+            const fragment = document.createDocumentFragment()
+            contents[0].values.forEach(e => {
+              const a = document.createElement('a')
+              a.innerText = `${e[0]}(${e[2]})`
+              a.href = `./list.html?fid=${e[1]}&page=1`
+              fragment.appendChild(a)
+            })
+            document.body.appendChild(fragment)
+          }
+          xhr.send()
+        })
+      }
+    }
+    jsonXhr.send()
+
+  </script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    a+a {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+</body>
+
+</html>
