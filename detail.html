@@ -14,8 +14,7 @@
     jsonXhr.onreadystatechange = function () {
       if (jsonXhr.readyState == 4 && jsonXhr.status == 200) {
         const query = new URLSearchParams(location.search)
-        const fid = query.get('fid')
-        const page = query.get('page')
+        const url = query.get('url')
         let config = {
           locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
         }
