@@ -24,6 +24,9 @@ const start = async () => {
         sleep(2500)
         continue
       }
+      const post_time = data.match(/(?<=data-timestamp=").*?(?=")/)[0]
+      console.log('post_time: ', post_time)
+      await DB.update('t_topic', { 'post_time': post_time }, `url = "${iterator[2]}"`)
       const html = `${matched[0]
         .replace(/ess-data/g, "src")
         .replace(/&nbsp;/g, "")
