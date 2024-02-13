@@ -24,13 +24,17 @@
           xhr.responseType = 'arraybuffer'
           xhr.onload = e => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
-            const contents = db.exec(`SELECT * FROM t_topic tp WHERE fid = ${fid} AND EXISTS(SELECT * FROM t_content tc WHERE tp.url=tc.url)`)
+            const contents = db.exec(`SELECT * FROM t_topic tp WHERE fid = ${fid} AND post_time NOTNULL ORDER BY post_time DESC`)
             const fragment = document.createDocumentFragment()
             contents[0].values.forEach(e => {
               const a = document.createElement('a')
               a.innerHTML = e[0]
               a.href = `./detail.html?url=${e[2]}`
+              const span = document.createElement('span')
+              const date = new Date(Number(`${e[3]}000`))
+              span.innerText = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
               fragment.appendChild(a)
+              fragment.appendChild(span)
             })
             document.body.appendChild(fragment)
           }
@@ -45,10 +49,11 @@
     body {
       display: flex;
       flex-direction: column;
+      background-color: #F9F9EC;
     }
 
-    a+a {
-      margin-top: 10px;
+    span {
+      margin-bottom: 20px;
     }
   </style>
 </head>

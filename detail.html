@@ -25,9 +25,11 @@
           xhr.onload = e => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
             const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
+            const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${url}"`)[0].values[0]
+            const date = new Date(Number(`${post_time}000`))
             const contents = db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
             contents[0].values.forEach(e => {
-              document.body.innerHTML = `<h3>${title}</h3><br>${e[0]}`
+              document.body.innerHTML = `<h3>${title}</h3><span>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</span><br><br>${e[0]}`
             })
           }
           xhr.send()
@@ -38,6 +40,10 @@
 
   </script>
   <style>
+    body {
+      background-color: #F9F9EC;
+    }
+
     img {
       width: 100%;
     }
