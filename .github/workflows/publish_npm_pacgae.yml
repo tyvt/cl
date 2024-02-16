@@ -20,6 +20,8 @@ jobs:
           git config --global user.name example
           npm version patch
           node replace_version.js
+          git add .
+          git commit -m"`date +'%Y-%m-%d'` update version" --allow-empty
           git pull --rebase
       - name: Push changes
         uses: ad-m/github-push-action@master
