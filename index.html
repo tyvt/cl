@@ -24,7 +24,7 @@
           xhr.responseType = 'arraybuffer'
           xhr.onload = e => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
-            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_topic WHERE fid = tc.fid AND post_time NOTNULL) AS count FROM t_channel tc`)
+            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content tt WHERE tt.fid = tc.fid) AS count FROM t_channel tc`)
             const fragment = document.createDocumentFragment()
             contents[0].values.forEach(e => {
               const a = document.createElement('a')
