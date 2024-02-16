@@ -25,7 +25,6 @@ const start = async () => {
         continue
       }
       const post_time = data.match(/(?<=data-timestamp=").*?(?=")/)[0]
-      console.log('post_time: ', post_time)
       await DB.update('t_topic', { 'post_time': post_time }, `url = "${iterator[2]}"`)
       const html = `${matched[0]
         .replace(/ess-data/g, "src")
@@ -35,9 +34,9 @@ const start = async () => {
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
         </div><br>`
       arr.push({
-        fid: `${iterator[1]}`,
-        url: `${iterator[2]}`,
-        content: `${html}`,
+        fid: iterator[1],
+        url: iterator[2],
+        content: html,
       })
       sleep(2500)
     }
