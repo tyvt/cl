@@ -12,9 +12,6 @@
     jsonXhr.open("GET", './package.json', true)
     jsonXhr.onreadystatechange = function () {
       if (jsonXhr.readyState == 4 && jsonXhr.status == 200) {
-        const query = new URLSearchParams(location.search)
-        const fid = query.get('fid')
-        const page = query.get('page')
         let config = {
           locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
         }
@@ -24,7 +21,7 @@
           xhr.responseType = 'arraybuffer'
           xhr.onload = e => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
-            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content tt WHERE tt.fid = tc.fid) AS count FROM t_channel tc`)
+            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content tt WHERE tt.url like '%/' || tc.fid || '/%') AS count FROM t_channel tc`)
             const fragment = document.createDocumentFragment()
             contents[0].values.forEach(e => {
               const a = document.createElement('a')

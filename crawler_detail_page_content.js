@@ -5,7 +5,7 @@ const start = async () => {
   const arr = []
   const DB = new DBHelper()
   DB.runSQL(
-    `SELECT * FROM t_topic tt WHERE fid IS NOT  "20" AND NOT EXISTS(SELECT * FROM t_content tc WHERE tt.url=tc.url) LIMIT 200`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.url NOT IN(SELECT url FROM t_content tc) LIMIT 200`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -37,8 +37,7 @@ const start = async () => {
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
         </div><br>`
       arr.push({
-        fid: iterator[1],
-        url: iterator[2],
+        url: iterator[1],
         content: html,
       })
       sleep(2500)
