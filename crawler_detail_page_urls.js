@@ -14,7 +14,6 @@ const getUrl = async (fid, page) => {
     const url = element.match(/(?<=href="htm_data)(.*?)(?=.html")/)[0]
     arr.push({
       name: `${name.replace(/\"/g, "'")}`,
-      fid: fid,
       url: `${url}`,
       post_time: ''
     })
