@@ -8,9 +8,9 @@ const start = async () => {
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
+      const timerTotal = new TimerHelper()
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${iterator[0]}.html`
       const { data } = await get(url)
-      const timerTotal = new TimerHelper()
       // copyToClipboard(data);
       if (data.includes(`無法找到頁面`)) {
         await DB_MAIN.runSQL(`delete from t_topic where url = "${iterator[0]}"`)
