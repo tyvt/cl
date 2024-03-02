@@ -49,6 +49,7 @@ const start = async () => {
 }
 
 const count = async () => {
+  console.log(111)
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL('SELECT fid FROM t_channel').then(async res => {
@@ -58,7 +59,6 @@ const count = async () => {
           count: detailRes[0].values[0][0]
         }, `fid = "${iterator[0]}"`)
       })
-
     }
   })
 }
