@@ -42,7 +42,7 @@ const start = async () => {
       })
       sleep(2500)
     }
-    const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0]..split('/')[2]}.sqlite`)
+    const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
     await DB_DETAIL.insert("t_content", arr)
     await count()
   })
