@@ -20,17 +20,25 @@
         }
         initSqlJs(config).then(function (SQL) {
           const xhr = new XMLHttpRequest()
-          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-crawler.sqlite`, true)
+          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-main.sqlite`, true)
           xhr.responseType = 'arraybuffer'
-          xhr.onload = e => {
+          xhr.onload = () => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
             const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
             const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${url}"`)[0].values[0]
             const date = new Date(Number(`${post_time}000`))
-            const contents = db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
-            contents[0].values.forEach(e => {
-              document.body.innerHTML = `<h3>${title}</h3><span>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</span><br><br>${e[0]}`
-            })
+            const xhrDetail = new XMLHttpRequest()
+            xhrDetail.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-detail.sqlite`, true)
+            xhrDetail.responseType = 'arraybuffer'
+            xhrDetail.onload = e => {
+              const db_detail = new SQL.Database(new Uint8Array(xhrDetail.response))
+              const contents = db_detail.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
+              contents[0].values.forEach(e => {
+                document.body.innerHTML = `<h3>${title}</h3><span>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</span><br><br>${e[0]}`
+              })
+            }
+            xhrDetail.send()
+
           }
           xhr.send()
         })

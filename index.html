@@ -17,15 +17,17 @@
         }
         initSqlJs(config).then(function (SQL) {
           const xhr = new XMLHttpRequest()
-          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-crawler.sqlite`, true)
+          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-main.sqlite`, true)
           xhr.responseType = 'arraybuffer'
           xhr.onload = e => {
             const db = new SQL.Database(new Uint8Array(xhr.response))
-            const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content tt WHERE tt.url like '%/' || tc.fid || '/%') AS count FROM t_channel tc`)
+            // const contents = db.exec(`SELECT tc.name, tc.fid, (SELECT COUNT(*) FROM t_content tt WHERE tt.url like '%/' || tc.fid || '/%') AS count FROM t_channel tc`)
+            const contents = db.exec(`SELECT tc.name, tc.fid FROM t_channel tc`)
             const fragment = document.createDocumentFragment()
             contents[0].values.forEach(e => {
               const a = document.createElement('a')
-              a.innerText = `${e[0]}(${e[2]})`
+              // a.innerText = `${e[0]}(${e[2]})`
+              a.innerText = `${e[0]}`
               a.href = `./list.html?fid=${e[1]}&page=1`
               fragment.appendChild(a)
             })
