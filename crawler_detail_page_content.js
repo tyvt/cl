@@ -6,7 +6,7 @@ const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 2`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 200`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -44,12 +44,11 @@ const start = async () => {
       sleep(2500)
     }
     await DB_DETAIL.insert("t_content", arr)
+    await count()
   })
-  await count()
 }
 
 const count = async () => {
-  console.log(111)
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL('SELECT fid FROM t_channel').then(async res => {
