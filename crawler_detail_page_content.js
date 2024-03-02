@@ -4,9 +4,8 @@ import fs from "fs"
 const start = async () => {
   const arr = []
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
-  const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 200`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 2`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -36,13 +35,14 @@ const start = async () => {
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
         .replace(/\sdata-link='.*?'/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
-        </div><br>`
+          </div><br>`
       arr.push({
         url: iterator[0],
         content: html,
       })
       sleep(2500)
     }
+    const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0]..split('/')[2]}.sqlite`)
     await DB_DETAIL.insert("t_content", arr)
     await count()
   })
@@ -50,9 +50,9 @@ const start = async () => {
 
 const count = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
-  const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL('SELECT fid FROM t_channel').then(async res => {
     for await (const iterator of res[0].values) {
+      const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0]}.sqlite`)
       DB_DETAIL.runSQL(`SELECT COUNT(*) FROM t_content tc WHERE tc.url LIKE '%/' || ${iterator[0]} || '/%'`).then(async detailRes => {
         await DB_MAIN.update('t_channel', {
           count: detailRes[0].values[0][0]
