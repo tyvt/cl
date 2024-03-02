@@ -20,9 +20,11 @@ export class TimerHelper {
 }
 
 export class DBHelper {
-  constructor() { }
+  constructor(url) {
+    this.url = url
+  }
   async initDB() {
-    this.DBBuffer = fs.readFileSync("./db/cl-crawler.sqlite")
+    this.DBBuffer = fs.readFileSync(this.url)
     const SQL = await initSqlJs()
     return new SQL.Database(this.DBBuffer)
   }
@@ -40,7 +42,7 @@ export class DBHelper {
     })
     const result = DB.export()
     const buffer = Buffer.from(result)
-    fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
+    fs.writeFileSync(this.url, buffer)
     DB.close()
   }
   async update(tableName, data, condition) {
@@ -53,7 +55,7 @@ export class DBHelper {
     DB.exec(sql, obj)
     const result = DB.export()
     const buffer = Buffer.from(result)
-    fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
+    fs.writeFileSync(this.url, buffer)
     DB.close()
   }
   async runSQL(sql, options) {
@@ -62,7 +64,7 @@ export class DBHelper {
       const result = DB.exec(sql, options)
       const arr = DB.export()
       const buffer = Buffer.from(arr)
-      fs.writeFileSync("./db/cl-crawler.sqlite", buffer)
+      fs.writeFileSync(this.url, buffer)
       DB.close()
       resolve(result)
     })

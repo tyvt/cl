@@ -1,7 +1,7 @@
 import { get, DBHelper, sleep } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js"
 
-const DB = new DBHelper()
+const DB = new DBHelper("./db/cl-main.sqlite")
 DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 200').then(async result => {
   const data = result[0].values || []
   for await (const topic of data) {
