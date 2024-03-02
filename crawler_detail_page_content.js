@@ -6,7 +6,7 @@ const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 200`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 2`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
