@@ -45,6 +45,22 @@ const start = async () => {
     }
     await DB_DETAIL.insert("t_content", arr)
   })
+  await count()
+}
+
+const count = async () => {
+  const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
+  const DB_DETAIL = new DBHelper("./db/cl-detail.sqlite")
+  DB_MAIN.runSQL('SELECT fid FROM t_channel').then(async res => {
+    for await (const iterator of res[0].values) {
+      DB_DETAIL.runSQL(`SELECT COUNT(*) FROM t_content tc WHERE tc.url LIKE '%/' || ${iterator[0]} || '/%'`).then(async detailRes => {
+        await DB_MAIN.update('t_channel', {
+          count: detailRes[0].values[0][0]
+        }, `fid = "${iterator[0]}"`)
+      })
+
+    }
+  })
 }
 
 start()
