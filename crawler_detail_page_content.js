@@ -1,8 +1,7 @@
-import { DBHelper, get, sleep, copyToClipboard } from "./utils.js"
+import { DBHelper, get, sleep, copyToClipboard, TimerHelper } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js"
 import fs from "fs"
 const start = async () => {
-  const arr = []
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   DB_MAIN.runSQL(
     `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 2`
@@ -11,6 +10,7 @@ const start = async () => {
     for await (const iterator of list) {
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${iterator[0]}.html`
       const { data } = await get(url)
+      const timerTotal = new TimerHelper()
       // copyToClipboard(data);
       if (data.includes(`無法找到頁面`)) {
         await DB_MAIN.runSQL(`delete from t_topic where url = "${iterator[0]}"`)
@@ -36,12 +36,12 @@ const start = async () => {
         .replace(/\sdata-link='.*?'/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
           </div><br>`
-      arr.push({
+      const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
+      await DB_DETAIL.insert("t_content", [{
         url: iterator[0],
         content: html,
-      })
-      const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
-      await DB_DETAIL.insert("t_content", arr)
+      }])
+      console.log(`${timerTotal.getDuration() / 1000 / 60 / 60} s`)
       sleep(2000)
     }
     await count()
