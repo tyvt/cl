@@ -23,7 +23,7 @@ const getUrl = async (fid, page) => {
 
 async function start() {
   const timerTotal = new TimerHelper()
-  const DB = new DBHelper()
+  const DB = new DBHelper("./db/cl-main.sqlite")
   await DB.runSQL(
     `select * from t_channel tc`
   ).then(async (result) => {
