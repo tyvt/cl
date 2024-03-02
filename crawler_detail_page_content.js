@@ -4,7 +4,7 @@ import fs from "fs"
 const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 2`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time IS NULL LIMIT 200`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -14,14 +14,14 @@ const start = async () => {
       // copyToClipboard(data);
       if (data.includes(`無法找到頁面`)) {
         await DB_MAIN.runSQL(`delete from t_topic where url = "${iterator[0]}"`)
-        sleep(2500)
+        sleep(2200)
         continue
       }
       const matched = data.match(
         /<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/
       )
       if (!matched) {
-        sleep(2500)
+        sleep(2200)
         continue
       }
       const matchedTime = data.match(/(?<=data-timestamp=").*?(?=")/)
@@ -41,8 +41,7 @@ const start = async () => {
         url: iterator[0],
         content: html,
       }])
-      console.log(`${timerTotal.getDuration() / 1000 / 60 / 60} s`)
-      sleep(2000)
+      sleep(2200)
     }
     await count()
   })
