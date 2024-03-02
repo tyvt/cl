@@ -28,7 +28,7 @@
             const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${url}"`)[0].values[0]
             const date = new Date(Number(`${post_time}000`))
             const xhrDetail = new XMLHttpRequest()
-            xhrDetail.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-detail.sqlite`, true)
+            xhrDetail.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-detail-${url.split('/')[2]}.sqlite`, true)
             xhrDetail.responseType = 'arraybuffer'
             xhrDetail.onload = e => {
               const db_detail = new SQL.Database(new Uint8Array(xhrDetail.response))

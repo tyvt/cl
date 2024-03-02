@@ -40,10 +40,10 @@ const start = async () => {
         url: iterator[0],
         content: html,
       })
-      sleep(2500)
+      const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
+      await DB_DETAIL.insert("t_content", arr)
+      sleep(2000)
     }
-    const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
-    await DB_DETAIL.insert("t_content", arr)
     await count()
   })
 }
