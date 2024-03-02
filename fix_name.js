@@ -5,7 +5,7 @@ const DB = new DBHelper("./db/cl-main.sqlite")
 DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 200').then(async result => {
   const data = result[0].values || []
   for await (const topic of data) {
-    const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[2]}.html`
+    const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[1]}.html`
     const { data } = await get(url)
     const matched = data.match(/(?<=<h4 class="f16">).*?(?=<\/h4>)/)
     const name = matched && matched.length && matched[0].replace(/<.*>\s/, '')
@@ -14,7 +14,7 @@ DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 200').the
       {
         name: name,
       },
-      `url = "${topic[2]}"`
+      `url = "${topic[1]}"`
     )
     sleep(2500)
   }
