@@ -9,32 +9,28 @@
 import { onLoad } from "@dcloudio/uni-app"
 import { SQL_WASM } from '../../../constant'
 import { ref } from 'vue'
+import version from '@/static/version'
 let articles = ref([])
 onLoad((options) => {
   window.initSqlJs({
     locateFile: () => SQL_WASM,
   }).then((SQL) => {
     uni.request({
-      url: './package.json',
-      success: (res) => {
-        uni.request({
-          url: `https://unpkg.com/cl-lite@${res.data.version}/db/cl-main.sqlite`,
-          responseType: 'arraybuffer'
-        }).then(sqlite => {
-          const db = new SQL.Database(new Uint8Array(sqlite.data))
-          const contents = db.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${options.fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC`)
-          const list = []
-          contents[0].values.forEach(e => {
-            const date = new Date(Number(`${e[2]}000`))
-            list.push({
-              text: e[0],
-              url: e[1],
-              date: `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-            })
-          })
-          articles.value = list
+      url: `https://unpkg.com/cl-lite@${version}/db/cl-main.sqlite`,
+      responseType: 'arraybuffer'
+    }).then(sqlite => {
+      const db = new SQL.Database(new Uint8Array(sqlite.data))
+      const contents = db.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${options.fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC`)
+      const list = []
+      contents[0].values.forEach(e => {
+        const date = new Date(Number(`${e[2]}000`))
+        list.push({
+          text: e[0],
+          url: e[1],
+          date: `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         })
-      }
+      })
+      articles.value = list
     })
   })
 })
