@@ -2,57 +2,23 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1.0.208</title>
-  <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
+  <meta charset="UTF-8" />
   <script>
-    var jsonXhr = new XMLHttpRequest()
-    jsonXhr.open("GET", './package.json', true)
-    jsonXhr.onreadystatechange = function () {
-      if (jsonXhr.readyState == 4 && jsonXhr.status == 200) {
-        let config = {
-          locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
-        }
-        initSqlJs(config).then(function (SQL) {
-          const xhr = new XMLHttpRequest()
-          xhr.open('GET', `https://unpkg.com/cl-lite@${JSON.parse(jsonXhr.responseText).version}/db/cl-main.sqlite`, true)
-          xhr.responseType = 'arraybuffer'
-          xhr.onload = e => {
-            const db = new SQL.Database(new Uint8Array(xhr.response))
-            const contents = db.exec(`SELECT tc.name, tc.fid, tc.count FROM t_channel tc`)
-            const fragment = document.createDocumentFragment()
-            contents[0].values.forEach(e => {
-              const a = document.createElement('a')
-              a.innerText = `${e[0]}(${e[2]})`
-              a.href = `./list.html?fid=${e[1]}&page=1`
-              fragment.appendChild(a)
-            })
-            document.body.appendChild(fragment)
-          }
-          xhr.send()
-        })
-      }
-    }
-    jsonXhr.send()
-
+    var coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') ||
+      CSS.supports('top: constant(a)'))
+    document.write(
+      '<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' +
+      (coverSupport ? ', viewport-fit=cover' : '') + '" />')
   </script>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      background-color: #F9F9EC;
-    }
-
-    a+a {
-      margin-top: 20px;
-    }
-  </style>
+  <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
+  <title></title>
+  <!--preload-links-->
+  <!--app-context-->
 </head>
 
 <body>
-
+  <div id="app"><!--app-html--></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
