@@ -1,0 +1,1 @@
+import{N as s,O as t,P as o,Q as a,R as n}from"./index-f0a59bd6.js";const r=(s,t)=>{const o=s.__vccOpts||s;for(const[a,n]of t)o[a]=n;return o};function c(t,o){return s(t)?o:t}const m=(s=>(a,r=o())=>{!n&&t(s,a,r)})(a),p="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm";export{p as S,r as _,m as o,c as r};
