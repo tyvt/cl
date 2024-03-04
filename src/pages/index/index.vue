@@ -1,7 +1,7 @@
 <template>
   <uv-list>
     <uv-list-item v-for="category in categories" :title="`${category.text}(${category.count})`" link
-      :to="`/pages/list/index?fid=${category.fid}&text=${category.text}`"></uv-list-item>
+      :to="`/pages/list/index?fid=${category.fid}&text=${category.text}&total=${category.count}`"></uv-list-item>
   </uv-list>
 </template>
 
