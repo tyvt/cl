@@ -1,5 +1,5 @@
 import { DBHelper, get, sleep, copyToClipboard, TimerHelper } from "./utils.js"
-import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "./constant.js"
+import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "../constant.js"
 import fs from "fs"
 const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")

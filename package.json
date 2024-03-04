@@ -2,6 +2,9 @@
   "name": "cl-lite",
   "version": "1.0.208",
   "type": "module",
+  "files": [
+    "dist/build/h5/*"
+  ],
   "scripts": {
     "dev:app": "uni -p app",
     "dev:h5": "uni",

@@ -1,9 +1,9 @@
 import https from "https"
 import http from "http"
 import fs from "fs"
-import UserAgent from "./packages/user-agents.cjs"
+import UserAgent from "../packages/user-agents.cjs"
 // import { HttpsProxyAgent } from 'https-proxy-agent'
-import initSqlJs from "./packages/sql-wasm.cjs"
+import initSqlJs from "../packages/sql-wasm.cjs"
 import { exec } from "child_process"
 export function copyToClipboard(str) {
   exec("clip").stdin?.end(str)
