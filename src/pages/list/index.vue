@@ -1,17 +1,34 @@
 <template>
   <uv-list>
-    <uv-list-item v-for="article in articles" :title="article.text" :note="article.date" link
+    <uv-list-item v-for="article in list" :title="article.text" :note="article.date" link
       :to="`/pages/detail/index?url=${article.url}`"></uv-list-item>
+    <uv-load-more :status="status" />
   </uv-list>
 </template>
 
 <script setup>
 import { onLoad } from "@dcloudio/uni-app"
+import useLoadMore from '../../utils/useLoadMore'
 import { SQL_WASM } from '../../../constant'
 import { ref } from 'vue'
 import version from '@/static/version'
+const { list, total, status, refresh } = useLoadMore(getList)
+async function getList() {
+  const [pageParams] = arguments
+  return new Promise((resolve, reject) => {
+    resolve({
+      rows: articles.value.slice(pageParams.page, pageParams.pageSize),
+      total: articles.value.length
+    })
+  })
+}
 let articles = ref([])
 onLoad((options) => {
+  if (options.text) {
+    uni.setNavigationBarTitle({
+      title: decodeURIComponent(options.text)
+    })
+  }
   window.initSqlJs({
     locateFile: () => SQL_WASM,
   }).then((SQL) => {
