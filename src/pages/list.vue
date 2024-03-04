@@ -7,7 +7,7 @@
 
 <script setup>
 import { onLoad } from "@dcloudio/uni-app"
-import { SQL_WASM } from '../../../constant'
+import { SQL_WASM } from '../../constant'
 import { ref } from 'vue'
 import version from '@/static/version'
 import { useInfiniteScroll } from 'vue-hooks-plus'
