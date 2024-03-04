@@ -1,10 +1,12 @@
 name: Publish Package to npmjs
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["crawler detail page content"]
-    types:
-      - completed
+  schedule:
+    - cron: "30 18 * * *"
+  # workflow_run:
+  #   workflows: ["crawler detail page content"]
+  #   types:
+  #     - completed
 jobs:
   build:
     runs-on: ubuntu-latest
