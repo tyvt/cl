@@ -3,7 +3,8 @@
   "version": "1.0.209",
   "type": "module",
   "files": [
-    "dist/build/h5/*"
+    "dist/build/h5/*",
+    "db/*"
   ],
   "scripts": {
     "dev:app": "uni -p app",
