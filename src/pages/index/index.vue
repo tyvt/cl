@@ -1,7 +1,7 @@
 <template>
   <uv-list>
-    <uv-list-item v-for="category in categories" :title="category.text" link
-      :to="`/pages/list/index?fid=${category.fid}`"></uv-list-item>
+    <uv-list-item v-for="category in categories" :title="`${category.text}(${category.count})`" link
+      :to="`/pages/list/index?fid=${category.fid}&text=${category.text}`"></uv-list-item>
   </uv-list>
 </template>
 
@@ -22,7 +22,8 @@ window.initSqlJs({
     const list = []
     contents[0].values.forEach(e => {
       list.push({
-        text: `${e[0]}(${e[2]})`,
+        text: `${e[0]}`,
+        count: e[2],
         fid: e[1]
       })
     })

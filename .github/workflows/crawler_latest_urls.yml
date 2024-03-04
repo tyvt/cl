@@ -21,7 +21,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
-          node crawler_latest_urls.js
+          node jobs/crawler_latest_urls.js
       - name: Commit
         run: |
           git config --global user.email example@example.com
