@@ -1,0 +1,27 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "cl-lite"
+			}
+		},
+		{
+			"path": "pages/list/index"
+		},
+		{
+			"path": "pages/detail/index"
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarBackgroundColor": "#0F7884",
+		"backgroundColor": "#F9F9EC"
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uv-(.*)": "@climblee/uv-ui/components/uv-$1/uv-$1.vue"
+		}
+	}
+}
