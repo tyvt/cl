@@ -17,10 +17,7 @@ function execute(command) {
 export default defineConfig(async ({ command, mode, ssrBuild }) => {
   const version = await execute('npm pkg get version')
   fs.writeFileSync('src/static/version.js', `export default ${version}`)
-  const base = mode == 'production' ? `https://unpkg.com/cl-lite@${version.replace(/\n/, '').replace(/"/g, '')}/dist/build/h5/` : ''
-
   return {
-    base: base,
     plugins: [
       uni.default(),
     ],
