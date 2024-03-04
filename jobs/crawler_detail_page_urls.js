@@ -1,4 +1,4 @@
-import { CL_DOMAIN } from "./constant.js"
+import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 const TOTAL_PAGES = 6
 
