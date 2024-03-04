@@ -4,7 +4,7 @@
 
 <script setup>
 import { onLoad } from "@dcloudio/uni-app"
-import { SQL_WASM } from '../../../constant'
+import { SQL_WASM } from '../../constant'
 import version from '@/static/version'
 import { ref } from 'vue'
 let content = ref()

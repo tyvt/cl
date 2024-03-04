@@ -1,16 +1,16 @@
 {
 	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/home",
 			"style": {
 				"navigationBarTitleText": "cl-lite"
 			}
 		},
 		{
-			"path": "pages/list/index"
+			"path": "pages/list"
 		},
 		{
-			"path": "pages/detail/index"
+			"path": "pages/detail"
 		}
 	],
 	"globalStyle": {

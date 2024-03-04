@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { SQL_WASM } from '../../../constant'
+import { SQL_WASM } from '../../constant'
 import { ref } from 'vue'
 import version from '@/static/version'
 let categories = ref([])
