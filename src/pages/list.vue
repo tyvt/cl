@@ -1,7 +1,7 @@
 <template>
   <uv-list ref="domRef" class="list">
     <uv-list-item v-for="article in data?.list" :title="article.text" :note="article.date" link
-      :to="`/pages/detail/index?url=${article.url}`"></uv-list-item>
+      :to="`/pages/detail?url=${article.url}`"></uv-list-item>
   </uv-list>
 </template>
 
