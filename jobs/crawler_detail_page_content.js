@@ -27,7 +27,9 @@ const start = async () => {
       }
       console.log('matched: ', matched)
       const matchedTime = data.match(/Posted:.*/)
-      const post_time = new Date(matchedTime?.[0].replace('Posted:')).valueOf() / 1000
+      const matchDate = matchedTime?.[0].replace('Posted:')
+      console.log('matchDate: ', matchDate)
+      const post_time = new Date(matchDate).valueOf() / 1000
       console.log('post_time: ', post_time)
       if (post_time) {
         await DB_MAIN.update('t_topic', { 'post_time': post_time }, `url = "${iterator[0]}"`)
