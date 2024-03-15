@@ -27,7 +27,7 @@ const start = async () => {
       }
       console.log('matched: ', matched)
       const matchedTime = data.match(/Posted:.*/)
-      const matchDate = matchedTime?.[0].replace('Posted:')
+      const matchDate = matchedTime?.[0].replace('Posted:', '')
       console.log('matchDate: ', matchDate)
       const post_time = new Date(matchDate).valueOf() / 1000
       console.log('post_time: ', post_time)
