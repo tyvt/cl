@@ -18,6 +18,7 @@ const getUrl = async (fid, page) => {
       post_time: ''
     })
   })
+  console.log('arr: ', arr)
   return arr
 }
 
