@@ -24,9 +24,15 @@ const start = async () => {
         sleep(2200)
         continue
       }
-      const matchedTime = data.match(/Posted:.*/)
-      const matchDate = matchedTime?.[0].replace('Posted:', '')
-      const post_time = new Date(matchDate).valueOf() / 1000
+      let post_time
+      if (iterator[0].split('/')[2] == '5') {
+        const matchedTime = data.match(/Posted:.*/)
+        const matchDate = matchedTime?.[0].replace('Posted:', '')
+        post_time = new Date(matchDate).valueOf() / 1000
+      } else {
+        const matchedTime = data.match(/(?<=data-timestamp=").*?(?=")/)
+        post_time = matchedTime?.[0]
+      }
       console.log('post_time: ', post_time)
       if (post_time) {
         await DB_MAIN.update('t_topic', { 'post_time': post_time }, `url = "${iterator[0]}"`)
