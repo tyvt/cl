@@ -21,7 +21,7 @@ onLoad((options) => {
       const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${options.url}"`)[0].values[0]
       const date = new Date(Number(`${post_time}000`))
       uni.request({
-        url: `https://unpkg.com/cl-lite@${res.data.version}/db/cl-detail-${options.url.split('/')[2]}.sqlite`,
+        url: `https://unpkg.com/cl-lite@${version}/db/cl-detail-${options.url.split('/')[2]}.sqlite`,
         responseType: 'arraybuffer'
       }).then(detail => {
         const detail_db = new SQL.Database(new Uint8Array(detail.data))
