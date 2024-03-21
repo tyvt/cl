@@ -4,26 +4,22 @@
 
 <script setup>
 import { onLoad } from "@dcloudio/uni-app"
-import { SQL_WASM } from '../../constant'
-import version from '@/static/version'
+import useDBStore from '@/store/db'
 import { ref } from 'vue'
 let content = ref()
 onLoad((options) => {
-  window.initSqlJs({
-    locateFile: () => SQL_WASM,
-  }).then((SQL) => {
-    uni.request({
-      url: `https://unpkg.com/cl-lite@${version}/db/cl-main.sqlite`,
-      responseType: 'arraybuffer'
-    }).then(sqlite => {
+  if (options.title) {
+    uni.setNavigationBarTitle({
+      title: decodeURIComponent(options.title)
+    })
+  }
+  useDBStore.loadWASM().then((SQL) => {
+    useDBStore.loadDB('cl-main').then(sqlite => {
       const db = new SQL.Database(new Uint8Array(sqlite.data))
       const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${options.url}"`)[0].values[0]
       const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${options.url}"`)[0].values[0]
       const date = new Date(Number(`${post_time}000`))
-      uni.request({
-        url: `https://unpkg.com/cl-lite@${version}/db/cl-detail-${options.url.split('/')[2]}.sqlite`,
-        responseType: 'arraybuffer'
-      }).then(detail => {
+      useDBStore.loadDB(`cl-detail-${options.url.split('/')[2]}`).then(detail => {
         const detail_db = new SQL.Database(new Uint8Array(detail.data))
         const contents = detail_db.exec(`SELECT content FROM t_content tc WHERE url="${options.url}"`)
         contents[0].values.forEach(e => {

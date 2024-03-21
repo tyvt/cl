@@ -1,17 +1,17 @@
 <template>
   <uv-list ref="domRef" class="list">
     <uv-list-item v-for="article in data?.list" :title="article.text" :note="article.date" link
-      :to="`/pages/detail?url=${article.url}`"></uv-list-item>
+      :to="`/pages/detail?url=${article.url}&title=${title}`"></uv-list-item>
   </uv-list>
 </template>
 
 <script setup>
 import { onLoad } from "@dcloudio/uni-app"
-import { SQL_WASM } from '../../constant'
+import useDBStore from '@/store/db'
 import { ref } from 'vue'
-import version from '@/static/version'
 import { useInfiniteScroll } from 'vue-hooks-plus'
 const domRef = ref()
+const title = ref('')
 const PAGE_SIZE = 10
 const { data, loadMore } = useInfiniteScroll(
   (d) => {
@@ -48,6 +48,7 @@ async function getLoadMoreList(page, pageSize) {
 }
 onLoad((options) => {
   if (options.text) {
+    title.value = options.text
     uni.setNavigationBarTitle({
       title: decodeURIComponent(options.text)
     })
@@ -55,13 +56,8 @@ onLoad((options) => {
   fid.value = options.fid
   count.value = options.total
 
-  window.initSqlJs({
-    locateFile: () => SQL_WASM,
-  }).then((SQL) => {
-    uni.request({
-      url: `https://unpkg.com/cl-lite@${version}/db/cl-main.sqlite`,
-      responseType: 'arraybuffer'
-    }).then(sqlite => {
+  useDBStore.loadWASM().then((SQL) => {
+    useDBStore.loadDB('cl-main').then(sqlite => {
       db.value = new SQL.Database(new Uint8Array(sqlite.data))
       loadMore()
     })
