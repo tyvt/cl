@@ -35,7 +35,7 @@ jobs:
           CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         run: |
           npm i
-          npm run build:h5
+          npm run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
