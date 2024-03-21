@@ -36,9 +36,7 @@ jobs:
         run: |
           npm i
           npm run build
-      - run: |
-          npm adduser
-          npm publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deploy
