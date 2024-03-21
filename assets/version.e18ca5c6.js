@@ -1,1 +1,0 @@
-import{Y as s,Z as a,_ as t,a0 as o,a1 as n}from"./index-59a9696e.js";const r=(s,a)=>{const t=s.__vccOpts||s;for(const[o,n]of a)t[o]=n;return t};function c(a,t){return s(a)?t:a}const m=(s=>(o,r=t())=>{!n&&a(s,o,r)})(o),p="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",e="1.0.234";export{p as S,r as _,m as o,c as r,e as v};
