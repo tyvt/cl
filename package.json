@@ -7,24 +7,18 @@
     "db/*"
   ],
   "scripts": {
-    "dev:app": "uni -p app",
-    "dev:h5": "uni",
-    "dev:mp-weixin": "uni -p mp-weixin",
-    "build:h5": "uni build",
-    "build:mp-weixin": "uni build -p mp-weixin",
-    "deploy": "bash deploy.sh"
+    "dev": "uni",
+    "build": "uni build"
   },
   "dependencies": {
     "@climblee/uv-ui": "1.1.20",
     "@dcloudio/uni-app": "3.0.0-3090920231225001",
-    "@dcloudio/uni-components": "3.0.0-3090920231225001",
     "@dcloudio/uni-h5": "3.0.0-3090920231225001",
-    "@dcloudio/uni-mp-weixin": "3.0.0-3090920231225001",
-    "vue": "3.2.45",
+    "pinia": "2.0.33",
+    "vue": "3.3.0",
     "vue-hooks-plus": "1.8.8"
   },
   "devDependencies": {
-    "@dcloudio/types": "3.3.2",
     "@dcloudio/vite-plugin-uni": "3.0.0-3090920231225001",
     "sass": "1.71.1",
     "vite": "4.0.3"

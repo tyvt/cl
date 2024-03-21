@@ -6,17 +6,12 @@
 </template>
 
 <script setup>
-import { SQL_WASM } from '../../constant'
+import useDBStore from '@/store/db'
 import { ref } from 'vue'
-import version from '@/static/version'
 let categories = ref([])
-window.initSqlJs({
-  locateFile: () => SQL_WASM,
-}).then((SQL) => {
-  uni.request({
-    url: `https://unpkg.com/cl-lite@${version}/db/cl-main.sqlite`,
-    responseType: 'arraybuffer'
-  }).then(sqlite => {
+
+useDBStore.loadWASM().then((SQL) => {
+  useDBStore.loadDB('cl-main').then(sqlite => {
     const db = new SQL.Database(new Uint8Array(sqlite.data))
     const contents = db.exec(`SELECT tc.name, tc.fid, tc.count FROM t_channel tc`)
     const list = []
