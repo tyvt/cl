@@ -1,6 +1,6 @@
 {
   "name": "cl-lite",
-  "version": "1.0.234",
+  "version": "1.0.235",
   "type": "module",
   "files": [
     "dist/build/h5/*",
