@@ -36,4 +36,9 @@ onLoad((options) => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(._root) {
+  overflow-y: auto !important;
+  ;
+}
+</style>
