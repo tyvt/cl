@@ -1,28 +1,27 @@
 <template>
-  <uv-list ref="domRef" class="list">
-    <uv-list-item v-for="article in data?.list" :title="article.text" :note="article.date" link
-      :to="`/pages/detail?url=${article.url}&title=${title}`"></uv-list-item>
-  </uv-list>
+  <navigator v-for="article in data?.list" :url="`/pages/detail?url=${article.url}&title=${title}`">
+    <div style="display: flex; align-items: center; justify-content: space-between;padding: 20rpx;">
+      <span style="display: flex; flex-direction: column; flex: 1;">
+        <span style="font-size: 28rpx;">{{ article.text }}</span>
+        <span style="font-size: 24rpx;margin-top: 10rpx; color: #999;">{{ article.date }}</span>
+      </span>
+      <span
+        style="display: flex; align-items: center; justify-content: center; font-size: 40rpx; color: #999;min-width: 30rpx;">›</span>
+    </div>
+  </navigator>
 </template>
 
 <script setup>
-import { onLoad } from "@dcloudio/uni-app"
+import { onLoad, onReachBottom } from "@dcloudio/uni-app"
 import useDBStore from '@/store/db'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
-const domRef = ref()
 const title = ref('')
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 const { data, loadMore } = useInfiniteScroll(
   (d) => {
     const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
     return getLoadMoreList(page, PAGE_SIZE)
-  },
-  {
-    target: domRef,
-    isNoMore: d => {
-      return d?.list?.length == count.value
-    },
   },
 )
 const db = ref(null)
@@ -64,12 +63,8 @@ onLoad((options) => {
   })
 })
 
+onReachBottom(() => {
+  loadMore()
+})
 
 </script>
-
-<style scoped>
-.list {
-  height: 100%;
-  overflow-y: auto;
-}
-</style>

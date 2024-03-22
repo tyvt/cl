@@ -14,8 +14,6 @@ export default {
 
 <style>
 page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  padding: 10rpx;
 }
 </style>
