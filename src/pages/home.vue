@@ -1,8 +1,14 @@
 <template>
-  <uv-list>
-    <uv-list-item v-for="category in categories" :title="`${category.text}(${category.count})`" link
-      :to="`/pages/list?fid=${category.fid}&text=${category.text}&total=${category.count}`"></uv-list-item>
-  </uv-list>
+  <navigator v-for="category in categories"
+    :url="`/pages/list?fid=${category.fid}&text=${category.text}&total=${category.count}`">
+    <div style="display: flex; align-items: center; justify-content: space-between;padding: 20rpx;">
+      <span>
+        <span style="letter-spacing: 4rpx;font-size: 30rpx;">{{ `${category.text}` }}</span>
+        <span style="font-size: 26rpx;margin-left: 6rpx;">{{ `(${category.count})` }}</span>
+      </span>
+      <span style="font-size: 40rpx; color: #999;">›</span>
+    </div>
+  </navigator>
 </template>
 
 <script setup>
@@ -26,5 +32,3 @@ useDBStore.loadWASM().then((SQL) => {
   })
 })
 </script>
-
-<style scoped></style>

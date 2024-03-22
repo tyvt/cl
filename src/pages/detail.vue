@@ -1,5 +1,5 @@
 <template>
-  <uv-parse :content="content"></uv-parse>
+  <rich-text class="content" :nodes="content"></rich-text>
 </template>
 
 <script setup>
@@ -33,8 +33,7 @@ onLoad((options) => {
 </script>
 
 <style scoped>
-:deep(._root) {
-  overflow-y: auto !important;
-  ;
+.content img {
+  width: 100%;
 }
 </style>

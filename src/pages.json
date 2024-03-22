@@ -17,11 +17,5 @@
 		"navigationBarTextStyle": "white",
 		"navigationBarBackgroundColor": "#0F7884",
 		"backgroundColor": "#F9F9EC"
-	},
-	"easycom": {
-		"autoscan": true,
-		"custom": {
-			"^uv-(.*)": "@climblee/uv-ui/components/uv-$1/uv-$1.vue"
-		}
 	}
 }
