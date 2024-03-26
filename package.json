@@ -7,22 +7,20 @@
     "db/*"
   ],
   "scripts": {
-    "dev": "uni",
-    "build": "uni build"
+    "dev": "vite",
+    "build": "vite build"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@dcloudio/uni-app": "3.0.0-3090920231225001",
-    "@dcloudio/uni-h5": "3.0.0-3090920231225001",
     "pinia": "2.0.33",
-    "vue": "3.3.0",
+    "vue": "3.4.21",
+    "vue-router": "4.3.0",
     "vue-hooks-plus": "1.8.8"
   },
   "devDependencies": {
-    "@dcloudio/vite-plugin-uni": "3.0.0-3090920231225001",
-    "sass": "1.71.1",
-    "vite": "4.0.3"
+    "@vitejs/plugin-vue": "5.0.4",
+    "vite": "5.1.6"
   }
 }

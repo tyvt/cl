@@ -7,9 +7,9 @@ const useDBStore = defineStore('db', () => {
   const WASM = ref(null)
   const DB = reactive({})
   async function loadWASM() {
-    uni.showLoading({
-      title: '加载数据库依赖'
-    })
+    // uni.showLoading({
+    //   title: '加载数据库依赖'
+    // })
     return new Promise((resolve, reject) => {
       if (WASM.value) {
         resolve(WASM.value)
@@ -22,27 +22,29 @@ const useDBStore = defineStore('db', () => {
         })
       }
     }).finally(() => {
-      uni.hideLoading()
+      // uni.hideLoading()
     })
   }
   async function loadDB(DBName) {
-    uni.showLoading({
-      title: '加载数据'
-    })
+    // uni.showLoading({
+    //   title: '加载数据'
+    // })
     return new Promise((resolve, reject) => {
       if (DB[`${DBName}`]) {
         resolve(DB[`${DBName}`])
       } else {
-        uni.request({
-          url: `https://unpkg.com/cl-lite@${version}/db/${DBName}.sqlite`,
+        fetch(`https://unpkg.com/cl-lite@${version}/db/${DBName}.sqlite`, {
+          method: 'get',
           responseType: 'arraybuffer'
-        }).then(db => {
-          DB[`${DBName}`] = db
+        }).then(res => {
+          return res.arrayBuffer()
+        }).then(arraybuffer => {
+          DB[`${DBName}`] = arraybuffer
           resolve(DB[`${DBName}`])
         })
       }
     }).finally(() => {
-      uni.hideLoading()
+      // uni.hideLoading()
     })
   }
   return { loadWASM, loadDB }

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import uni from '@dcloudio/vite-plugin-uni'
+import vue from '@vitejs/plugin-vue'
 import { exec } from 'child_process'
 import childProcess from 'child_process'
 import fs from 'fs'
@@ -20,7 +20,7 @@ export default defineConfig(async ({ command, mode, ssrBuild }) => {
   return {
     base: mode == 'production' ? '/cl/' : './',
     plugins: [
-      uni.default(),
+      vue(),
     ],
   }
 })
