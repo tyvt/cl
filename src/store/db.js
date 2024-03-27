@@ -1,30 +1,9 @@
 import { defineStore } from 'pinia'
-import { SQL_WASM } from '../../constant'
-import { ref, reactive } from 'vue'
+import { reactive } from 'vue'
 import version from '../static/version'
 
 const useDBStore = defineStore('db', () => {
-  const WASM = ref(null)
   const DB = reactive({})
-  async function loadWASM() {
-    // uni.showLoading({
-    //   title: '加载数据库依赖'
-    // })
-    return new Promise((resolve, reject) => {
-      if (WASM.value) {
-        resolve(WASM.value)
-      } else {
-        window.initSqlJs({
-          locateFile: () => SQL_WASM,
-        }).then(sql => {
-          WASM.value = sql
-          resolve(WASM.value)
-        })
-      }
-    }).finally(() => {
-      // uni.hideLoading()
-    })
-  }
   async function loadDB(DBName) {
     // uni.showLoading({
     //   title: '加载数据'
@@ -47,7 +26,7 @@ const useDBStore = defineStore('db', () => {
       // uni.hideLoading()
     })
   }
-  return { loadWASM, loadDB }
+  return { loadDB }
 })
 
 export default useDBStore()

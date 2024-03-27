@@ -19,10 +19,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
 
 const db = ref(null)
-await useDBStore.loadWASM().then(async (SQL) => {
-  await useDBStore.loadDB('cl-main').then(sqlite => {
-    db.value = new SQL.Database(new Uint8Array(sqlite))
-  })
+await useDBStore.loadDB('cl-main').then(sqlite => {
+  db.value = new SQL.Database(new Uint8Array(sqlite))
 })
 const PAGE_SIZE = 20
 const { data, loadMore } = useInfiniteScroll(

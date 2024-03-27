@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
+  <script>
+    window.initSqlJs({
+      locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
+    }).then(sql => {
+      window.SQL = sql
+    })
+  </script>
   <title>1.0.250</title>
   <style>
     body {
