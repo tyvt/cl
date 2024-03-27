@@ -17,19 +17,17 @@ import { ref } from 'vue'
 let categories = ref([])
 
 const router = useRouter()
-useDBStore.loadWASM().then((SQL) => {
-  useDBStore.loadDB('cl-main').then(sqlite => {
-    const db = new SQL.Database(new Uint8Array(sqlite))
-    const contents = db.exec(`SELECT tc.name, tc.fid, tc.count FROM t_channel tc`)
-    const list = []
-    contents[0].values.forEach(e => {
-      list.push({
-        text: `${e[0]}`,
-        count: e[2],
-        fid: e[1]
-      })
+useDBStore.loadDB('cl-main').then(sqlite => {
+  const db = new SQL.Database(new Uint8Array(sqlite))
+  const contents = db.exec(`SELECT tc.name, tc.fid, tc.count FROM t_channel tc`)
+  const list = []
+  contents[0].values.forEach(e => {
+    list.push({
+      text: `${e[0]}`,
+      count: e[2],
+      fid: e[1]
     })
-    categories.value = list
   })
+  categories.value = list
 })
 </script>
