@@ -1,9 +1,12 @@
-import { get, DBHelper } from "../utils.js"
+import { get, DBHelper } from "./utils.js"
 const DB = new DBHelper("./db/cl-detail-2.sqlite")
 
 function removeClass() {
   DB.runSQL('SELECT * FROM t_content tc WHERE tc.content LIKE "%class=%"').then(async res => {
-    for await (const iterator of res[0].values) {
+
+    for await (let [index, iterator] of res[0].values.entries()) {
+      console.log(`${index}/${res[0].values.length}`)
+
       await DB.update('t_content', {
         content: iterator[1].replace(/class='.*?'/g, '')
       }, `url = "${iterator[0]}"`)
@@ -21,4 +24,4 @@ function removeStyle() {
   })
 }
 
-removeStyle()
+removeClass()
