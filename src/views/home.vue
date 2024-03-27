@@ -33,5 +33,3 @@ useDBStore.loadWASM().then((SQL) => {
   })
 })
 </script>
-
-<style scoped></style>

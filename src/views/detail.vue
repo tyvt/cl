@@ -24,13 +24,3 @@ await useDBStore.loadWASM().then(async (SQL) => {
 })
 
 </script>
-
-<style scoped>
-.content {
-  padding: 0 10px;
-}
-
-.content img {
-  width: 100%;
-}
-</style>

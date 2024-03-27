@@ -20,25 +20,3 @@ useRouter().beforeEach((to) => {
     <RouterView />
   </Suspense>
 </template>
-
-<style scoped>
-header {
-  height: 44px;
-  width: 100%;
-  background-color: #0F7884;
-  color: #fff;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: sticky;
-  top: 0;
-}
-
-.back {
-  position: absolute;
-  left: 0;
-  padding: 9px 14px;
-  font-size: 20px;
-}
-</style>
