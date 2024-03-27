@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import viteCompression from 'vite-plugin-compression'
 import { exec } from 'child_process'
 import childProcess from 'child_process'
 import fs from 'fs'
@@ -21,6 +22,18 @@ export default defineConfig(async ({ command, mode, ssrBuild }) => {
     base: mode == 'production' ? '/cl/' : './',
     plugins: [
       vue(),
+      viteCompression()
     ],
+    build: {
+      target: 'esnext',
+      cssCodeSplit: false,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            return 'index'
+          }
+        }
+      }
+    }
   }
 })
