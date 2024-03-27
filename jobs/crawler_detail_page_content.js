@@ -4,7 +4,7 @@ import fs from "fs"
 const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 300`
+    `SELECT url FROM t_topic tt WHERE tt.url NOT LIKE "%/20/%" AND (tt.post_time = '' OR tt.post_time ISNULL) ORDER BY rowid DESC LIMIT 300`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
