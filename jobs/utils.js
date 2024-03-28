@@ -110,8 +110,7 @@ export const get = async (url, config) => {
         (res) => {
           console.log('statusCode: ', res.statusCode)
           if (res.statusCode == '302') {
-            console.log('res: ', res)
-            resolve({ result: "error", data: res })
+            resolve({ result: "error", data: res, statusCode: res.statusCode })
             // get(url, requestConfig)
           } else {
             let rawData = ""
@@ -119,7 +118,7 @@ export const get = async (url, config) => {
               rawData += d.toString()
             })
             res.on("end", () => {
-              resolve({ result: "success", data: rawData })
+              resolve({ result: "success", data: rawData, statusCode: res.statusCode })
             })
           }
         }
