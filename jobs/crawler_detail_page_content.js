@@ -26,13 +26,13 @@ const start = async () => {
         continue
       }
       let post_time
-      if (iterator[0].split('/')[2] == '5') {
-        const matchedTime = data.match(/Posted:.*/)
+      let matchedTime = data.match(/(?<=data-timestamp=").*?(?=")/)
+      if (matchedTime?.[0]) {
+        post_time = matchedTime?.[0]
+      } else {
+        matchedTime = data.match(/Posted:.*/)
         const matchDate = matchedTime?.[0].replace('Posted:', '')
         post_time = new Date(matchDate).valueOf() / 1000
-      } else {
-        const matchedTime = data.match(/(?<=data-timestamp=").*?(?=")/)
-        post_time = matchedTime?.[0]
       }
       console.log('post_time: ', post_time)
       if (post_time) {
