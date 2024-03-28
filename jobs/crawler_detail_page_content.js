@@ -4,7 +4,7 @@ import fs from "fs"
 const start = async () => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   DB_MAIN.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 300`
+    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 1`
   ).then(async (res) => {
     const list = res?.[0].values || []
     for await (const iterator of list) {
@@ -20,6 +20,7 @@ const start = async () => {
       const matched = data.match(
         /<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/
       )
+      console.log('matched: ', matched)
       if (!matched) {
         sleep(2200)
         continue
