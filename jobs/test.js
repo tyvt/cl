@@ -1,4 +1,4 @@
-import { get, DBHelper } from "./utils.js"
+import { DBHelper } from "./utils.js"
 const DB = new DBHelper("./db/cl-detail-15.sqlite")
 
 function removeClass() {
