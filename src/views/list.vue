@@ -1,6 +1,6 @@
 <template>
   <div v-for="(article, index) in data?.list" :key="article.url"
-    @click="router.push(`/detail?url=${article.url}&title=${title}`)">
+    @click="router.push(`/detail?url=${article.url}&title=${article.text}`)">
     <div style="display: flex; align-items: center; justify-content: space-between;padding: 10px 12px;">
       <span style="display: flex; flex-direction: column; flex: 1;">
         <span style="font-size: 14px;">{{ article.text }}</span>
@@ -14,7 +14,7 @@
 
 <script setup>
 import useDBStore from '../store/db'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
 
@@ -29,11 +29,11 @@ const { data, loadMore } = useInfiniteScroll(
     return getLoadMoreList(page, PAGE_SIZE)
   },
 )
-const title = new URLSearchParams(location.search).get('title')
+const title = useRoute().query.title
 const router = useRouter()
 function getLoadMoreList(page, pageSize) {
-  const fid = new URLSearchParams(location.search).get('fid')
-  const total = new URLSearchParams(location.search).get('total')
+  const fid = useRoute().query.fid
+  const total = useRoute().query.total
   return new Promise((resolve, reject) => {
     const list = []
     const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)

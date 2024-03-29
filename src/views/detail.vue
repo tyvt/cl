@@ -4,9 +4,10 @@
 
 <script setup>
 import useDBStore from '../store/db'
+import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 let content = ref()
-const url = new URLSearchParams(location.search).get('url')
+const url = useRoute().query.url
 await useDBStore.loadDB('cl-main').then(sqlite => {
   const db = new SQL.Database(new Uint8Array(sqlite))
   const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
