@@ -30,10 +30,10 @@ const { data, loadMore } = useInfiniteScroll(
   },
 )
 const title = useRoute().query.title
+const fid = useRoute().query.fid
+const total = useRoute().query.total
 const router = useRouter()
 function getLoadMoreList(page, pageSize) {
-  const fid = useRoute().query.fid
-  const total = useRoute().query.total
   return new Promise((resolve, reject) => {
     const list = []
     const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
