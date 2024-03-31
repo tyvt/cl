@@ -45,7 +45,7 @@ const detail = async (fid) => {
         .replace(/\sdata-link='.*?'/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
           </div><br>`
-      const DB_DETAIL = new DBHelper(`./db/cl-detail-${iterator[0].split('/')[2]}.sqlite`)
+      const DB_DETAIL = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
       await DB_DETAIL.insert("t_content", [{
         url: iterator[0],
         content: html,
