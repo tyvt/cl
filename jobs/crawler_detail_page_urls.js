@@ -45,7 +45,7 @@ async function start() {
       await DB.update('t_channel', {
         update_time: Math.round(new Date().getTime() / 1000),
         category_size: size
-      }, `fid = "${category[0]}"`)
+      }, `fid = "${category[1]}"`)
       console.log(`Fetch ${category[0]} end.`)
     }
   })
