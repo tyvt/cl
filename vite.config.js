@@ -16,8 +16,6 @@ function execute(command) {
   })
 }
 export default defineConfig(async ({ command, mode, ssrBuild }) => {
-  const version = await execute('npm pkg get version')
-  fs.writeFileSync('src/static/version.js', `export default ${version}`)
   return {
     base: mode == 'production' ? '/cl/' : './',
     plugins: [
