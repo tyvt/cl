@@ -23,12 +23,7 @@ await useDBStore.loadDB('cl-main').then(sqlite => {
   db.value = new SQL.Database(new Uint8Array(sqlite))
 })
 const PAGE_SIZE = 20
-const { data, loadMore } = useInfiniteScroll(
-  (d) => {
-    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
-    return getLoadMoreList(page, PAGE_SIZE)
-  },
-)
+
 const title = useRoute().query.title
 const fid = useRoute().query.fid
 const total = useRoute().query.total
@@ -51,7 +46,12 @@ function getLoadMoreList(page, pageSize) {
     })
   })
 }
-
+const { data, loadMore } = useInfiniteScroll(
+  (d) => {
+    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
+    return getLoadMoreList(page, PAGE_SIZE)
+  },
+)
 function onReachBottom() {
   if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
     loadMore()
