@@ -1,16 +1,28 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "cl-lite",
+  "version": "1.0.258",
   "type": "module",
-  "main": "index.js",
+  "files": [
+    "dist/build/h5/*",
+    "db/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "dev:prod": "vite --mode production",
+    "build": "vite build"
   },
-  "author": "",
-  "license": "ISC",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
-    "axios": "^1.4.0",
-    "cheerio": "1.0.0-rc.12"
+    "pinia": "2.0.33",
+    "vue": "3.4.21",
+    "vue-hooks-plus": "1.8.8",
+    "vue-router": "4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "5.0.4",
+    "vite": "5.1.6",
+    "vite-plugin-compression": "0.5.1"
   }
 }
