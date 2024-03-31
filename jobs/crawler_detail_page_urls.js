@@ -1,7 +1,7 @@
 import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 import fs from "fs"
-const TOTAL_PAGES = 1
+const TOTAL_PAGES = 10
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
