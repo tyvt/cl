@@ -2,7 +2,6 @@ import { DBHelper, get, sleep, copyToClipboard, TimerHelper } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "../constant.js"
 import fs from "fs"
 const detail = async (fid) => {
-  console.log('fid: ', fid)
   const DB_CATEGORY = new DBHelper(`./db/cl-category-${fid}.sqlite`)
   await DB_CATEGORY.runSQL(
     `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 30`

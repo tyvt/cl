@@ -1,8 +1,6 @@
 name: crawler_latest_urls
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 16 1,15 * *"
 jobs:
   build:
     runs-on: ubuntu-latest

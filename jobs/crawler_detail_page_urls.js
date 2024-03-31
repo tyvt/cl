@@ -1,7 +1,7 @@
 import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 import fs from "fs"
-const TOTAL_PAGES = 10
+const TOTAL_PAGES = 6
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
@@ -19,7 +19,6 @@ const getUrl = async (fid, page) => {
       post_time: ''
     })
   })
-  console.log('arr: ', arr)
   return arr
 }
 
@@ -36,6 +35,7 @@ async function start() {
       for (let page = 1; page <= TOTAL_PAGES; page++) {
         const totalList = []
         const list = (await getUrl(category[1], page)) || []
+        console.log('count', list.length)
         totalList.push(...list)
         const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
         await DB_CATEGORY.insert("t_topic", totalList)
