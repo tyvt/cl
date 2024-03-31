@@ -24,7 +24,16 @@ const useDBStore = defineStore('db', () => {
           onProgress: onProgress
         }).then(arraybuffer => {
           DB[`${DBName}`] = arraybuffer
-          resolve(DB[`${DBName}`])
+          const checkModule = () => {
+            if (!window.SQL) {
+              setTimeout(() => {
+                checkModule()
+              }, 100)
+            } else {
+              resolve(DB[`${DBName}`])
+            }
+          }
+          checkModule()
         })
 
       }
