@@ -12,7 +12,9 @@
       </div>
     </div>
   </template>
-  <div v-else style="width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;">
+  <div v-else
+    style="width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div>{{ `${filesize(current_size)} / ${filesize(total_size)}` }}</div>
     <progress :max="total_size" :value="current_size">{{ percent }}%</progress>
   </div>
 </template>
@@ -22,7 +24,7 @@ import useDBStore from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
-
+import { filesize } from 'filesize'
 const db = ref(null)
 const title = useRoute().query.title
 const fid = useRoute().query.fid

@@ -1,6 +1,8 @@
 <template>
   <div v-if="db" class="content" v-html="content"></div>
-  <div v-else style="width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;">
+  <div v-else
+    style="width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div>{{ `${filesize(current_size)} / ${filesize(total_size)}` }}</div>
     <progress :max="total_size" :value="current_size">{{ percent }}%</progress>
   </div>
 </template>
@@ -8,6 +10,7 @@
 <script setup>
 import useDBStore from '../store/db'
 import { useRoute } from 'vue-router'
+import { filesize } from 'filesize'
 import { ref, onMounted, computed } from 'vue'
 let content = ref()
 const db = ref(null)
