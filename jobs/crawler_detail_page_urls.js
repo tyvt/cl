@@ -42,7 +42,7 @@ async function start() {
         sleep(2000)
       }
       const { size } = fs.statSync(`./db/cl-category-${category[1]}.sqlite`)
-      await DB_MAIN.update('t_channel', {
+      await DB.update('t_channel', {
         update_time: Math.round(new Date().getTime() / 1000),
         category_size: size
       }, `fid = "${category[0]}"`)
