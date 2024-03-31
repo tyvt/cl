@@ -1,6 +1,6 @@
 import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
-const TOTAL_PAGES = 10
+const TOTAL_PAGES = 1
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
@@ -36,14 +36,15 @@ async function start() {
         const totalList = []
         const list = (await getUrl(category[1], page)) || []
         totalList.push(...list)
-        await DB.insert("t_topic", totalList)
+        const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
+        await DB_CATEGORY.insert("t_topic", totalList)
         sleep(2000)
       }
-      await DB.runSQL(
-        `update t_channel set update_time = "${Math.round(
-          new Date().getTime() / 1000
-        )}" where fid = "${category[1]}"`
-      )
+      const { size } = fs.statSync(`./db/cl-category-${category[1]}.sqlite`)
+      await DB_MAIN.update('t_channel', {
+        update_time: Math.round(new Date().getTime() / 1000),
+        category_size: size
+      }, `fid = "${category[0]}"`)
       console.log(`Fetch ${category[0]} end.`)
     }
   })

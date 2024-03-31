@@ -8,17 +8,13 @@ import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 let content = ref()
 const url = useRoute().query.url
-await useDBStore.loadDB('cl-main').then(sqlite => {
-  const db = new SQL.Database(new Uint8Array(sqlite))
-  const title = db.exec(`SELECT name FROM t_topic tp WHERE url="${url}"`)[0].values[0]
-  const post_time = db.exec(`SELECT post_time FROM t_topic tp WHERE url="${url}"`)[0].values[0]
-  const date = new Date(Number(`${post_time}000`))
-  useDBStore.loadDB(`cl-detail-${url.split('/')[2]}`).then(detail => {
-    const detail_db = new SQL.Database(new Uint8Array(detail))
-    const contents = detail_db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
-    contents[0].values.forEach(e => {
-      content.value = `<h3>${title}</h3><span>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</span><br><br>${e[0]}`
-    })
+const title = useRoute().query.title
+const date = useRoute().query.date
+await useDBStore.loadDB(`cl-detail-${url.split('/')[2]}`).then(detail => {
+  const detail_db = new SQL.Database(new Uint8Array(detail))
+  const contents = detail_db.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
+  contents[0].values.forEach(e => {
+    content.value = `<h3>${title}</h3><span>${date}</span><br><br>${e[0]}`
   })
 })
 

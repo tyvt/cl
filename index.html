@@ -5,9 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
-  <script>
+  <script type="module">
+    let base = 'https://unpkg.com/sql.js@1.10.2/dist'
+    if (import.meta.env.MODE === 'development') {
+      base = './packages'
+    }
     window.initSqlJs({
-      locateFile: () => "https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.wasm",
+      locateFile: () => `${base}/sql-wasm.wasm`,
     }).then(sql => {
       window.SQL = sql
     })

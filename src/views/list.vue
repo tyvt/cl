@@ -1,6 +1,6 @@
 <template>
   <div v-for="(article, index) in data?.list" :key="article.url"
-    @click="router.push(`/detail?url=${article.url}&title=${article.text}`)">
+    @click="router.push(`/detail?date=${article.date}&title=${article.text}&url=${article.url}`)">
     <div style="display: flex; align-items: center; justify-content: space-between;padding: 10px 12px;">
       <span style="display: flex; flex-direction: column; flex: 1;">
         <span style="font-size: 14px;">{{ article.text }}</span>
@@ -19,14 +19,14 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
 
 const db = ref(null)
-await useDBStore.loadDB('cl-main').then(sqlite => {
+const title = useRoute().query.title
+const fid = useRoute().query.fid
+const total = useRoute().query.total
+await useDBStore.loadDB(`cl-category-${fid}`).then(sqlite => {
   db.value = new SQL.Database(new Uint8Array(sqlite))
 })
 const PAGE_SIZE = 20
 
-const title = useRoute().query.title
-const fid = useRoute().query.fid
-const total = useRoute().query.total
 const router = useRouter()
 function getLoadMoreList(page, pageSize) {
   return new Promise((resolve, reject) => {
