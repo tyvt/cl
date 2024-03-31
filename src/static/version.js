@@ -1,1 +1,1 @@
-export default 1.0.259
+export default 1.0.260
