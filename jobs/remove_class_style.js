@@ -1,5 +1,5 @@
 import { DBHelper } from "./utils.js"
-const DB = new DBHelper("./db/cl-detail-7.sqlite")
+const DB = new DBHelper("./db/cl-detail-5.sqlite")
 
 async function removeClass() {
   await DB.runSQL('SELECT * FROM t_content tc WHERE tc.content LIKE "%class=%"').then(async res => {
