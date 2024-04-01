@@ -73,7 +73,7 @@ async function main() {
   await DB.runSQL(
     `select * from t_channel tc`
   ).then(async (result) => {
-    const data = result[0].values || []
+    const data = result?.[0]?.values || []
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
       await detail(category[1])
