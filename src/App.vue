@@ -16,5 +16,9 @@ useRouter().beforeEach((to) => {
     <span v-show="showBack" class="back" @click="router.back()">{{ `<` }}</span>
         <span id="header">{{ title }}</span>
   </header>
-  <RouterView />
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
 </template>
