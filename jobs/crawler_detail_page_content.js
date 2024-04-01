@@ -6,7 +6,7 @@ const detail = async (fid) => {
   await DB_CATEGORY.runSQL(
     `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 30`
   ).then(async (res) => {
-    const list = res?.[0].values || []
+    const list = res?.[0]?.values || []
     for await (const iterator of list) {
       const timerTotal = new TimerHelper()
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${iterator[0]}.html`
