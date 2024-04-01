@@ -2,7 +2,7 @@ name: Publish Package to npmjs
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 18 * * *"
+    - cron: "30 22,3,10 * * *"
   # workflow_run:
   #   workflows: ["crawler detail page content"]
   #   types:
