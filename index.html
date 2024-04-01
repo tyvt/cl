@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
   <script type="module">
+    import { filesize } from 'filesize'
     let base = 'https://unpkg.com/sql.js@1.10.2/dist'
     if (import.meta.env.MODE === 'development') {
       base = './packages'
@@ -15,6 +16,31 @@
     }).then(sql => {
       window.SQL = sql
     })
+    window.request = function request(options) {
+      const { url, onProgress } = options
+      return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest()
+        xhr.responseType = "arraybuffer"
+        xhr.addEventListener("readystatechange", () => {
+          if (xhr.readyState === xhr.DONE) {
+            resolve(xhr.response)
+          }
+        })
+        if (onProgress) {
+          xhr.addEventListener("progress", (e) => {
+            onProgress(e.loaded)
+          })
+        }
+        xhr.open('get', url)
+        xhr.send()
+      })
+    }
+    // request({
+    //   url: `https://unpkg.com/cl-lite@${document.title}/assets/index.js`,
+    //   onProgress: (res) => {
+
+    //   }
+    // })
   </script>
   <title>1.0.262</title>
   <style>
@@ -62,7 +88,8 @@
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 

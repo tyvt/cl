@@ -15,7 +15,7 @@
   <div v-else
     style="width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
     <div>{{ `${filesize(current_size)} / ${filesize(total_size)}` }}</div>
-    <progress :max="total_size" :value="current_size">{{ percent }}%</progress>
+    <progress :max="total_size" :value="current_size"></progress>
   </div>
 </template>
 
