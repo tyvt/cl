@@ -71,35 +71,16 @@ export class DBHelper {
   }
 }
 
-async function getProxyIp() {
-  const res = await get(`http://demo.spiderpy.cn/get/?type=https`, { noProxy: true })
-  console.log('res: ', res)
-  if (JSON.parse(res.data).proxy) {
-    writeUrlToFilePath(
-      JSON.parse(res.data).proxy,
-      `./urls/proxy.txt`
-    )
-  }
-  return '140.249.88.236:80'
-}
-
 export const get = async (url, config) => {
   const requestConfig = {
     headers: {
       "user-agent": new UserAgent().toString(),
     }
   }
-  // if (Boolean(config?.noProxy) === false) {
-  //   const proxy = await getProxyIp()
-  //   console.log('proxy: ', proxy)
-  //   if (proxy) {
-  //     requestConfig.agent = new HttpsProxyAgent(`http://${proxy}`)
-  //   }
-  // }
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http
     console.log(
-      `Fetch ${url}, ${new Date(Date.now()).toLocaleDateString()} ${new Date(
+      `Fetch ${url}  ${new Date(Date.now()).toLocaleDateString()} ${new Date(
         Date.now()
       ).toLocaleTimeString()}`
     )
@@ -177,17 +158,5 @@ export const sleep = (maxInterval) => {
     if (now.getTime() > exitTime) {
       return
     }
-  }
-}
-
-export const writeUrlToFilePath = (url, path) => {
-  const urls = fs
-    .readFileSync(path, "utf-8")
-    .split("\n")
-    .filter((e) => e)
-  if (!urls.includes(url)) {
-    urls.push(url)
-    fs.writeFileSync(path, urls.join("\n"))
-    console.log(`${url} Recorded.`)
   }
 }
