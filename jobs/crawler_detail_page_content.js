@@ -42,6 +42,8 @@ const detail = async (fid) => {
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
         .replace(/\sdata-link='.*?'/g, "")
+        .replace(/<script.*?>.*?<\/script>/g, "")
+        .replace(/<link.*?>/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
           </div><br>`
       const DB_DETAIL = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
