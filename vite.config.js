@@ -20,7 +20,9 @@ export default defineConfig(async ({ command, mode, ssrBuild }) => {
     base: mode == 'production' ? '/cl/' : './',
     plugins: [
       vue(),
-      viteCompression()
+      viteCompression({
+        threshold: 10240
+      })
     ],
     build: {
       target: 'esnext',

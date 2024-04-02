@@ -36,6 +36,7 @@ jobs:
         run: |
           npm i
           npm run build
+          node jobs/replace_index.js
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
