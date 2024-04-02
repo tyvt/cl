@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/sql.js@1.10.2/dist/sql-wasm.js"></script>
   <script type="module">
-    import { filesize } from 'filesize'
     let base = 'https://unpkg.com/sql.js@1.10.2/dist'
     if (import.meta.env.MODE === 'development') {
       base = './packages'
@@ -35,12 +34,6 @@
         xhr.send()
       })
     }
-    // request({
-    //   url: `https://unpkg.com/cl-lite@${document.title}/assets/index.js`,
-    //   onProgress: (res) => {
-
-    //   }
-    // })
   </script>
   <title>1.0.265</title>
   <style>

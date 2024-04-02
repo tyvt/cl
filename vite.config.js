@@ -29,7 +29,8 @@ export default defineConfig(async ({ command, mode, ssrBuild }) => {
         output: {
           manualChunks(id) {
             return 'index'
-          }
+          },
+          entryFileNames: `assets/[name].js`,
         }
       }
     }
