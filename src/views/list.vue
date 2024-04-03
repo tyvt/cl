@@ -24,7 +24,6 @@ import useDBStore from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
-import { filesize } from 'filesize'
 const db = ref(null)
 const title = useRoute().query.title
 const fid = useRoute().query.fid
@@ -36,6 +35,7 @@ const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })
 const router = useRouter()
+const filesize = window.filesize
 function getLoadMoreList(page, pageSize) {
   return new Promise((resolve, reject) => {
     const list = []

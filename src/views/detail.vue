@@ -10,7 +10,6 @@
 <script setup>
 import useDBStore from '../store/db'
 import { useRoute } from 'vue-router'
-import { filesize } from 'filesize'
 import { ref, onMounted, computed } from 'vue'
 let content = ref()
 const db = ref(null)
@@ -20,6 +19,7 @@ const date = useRoute().query.date
 
 const total_size = ref(0)
 const current_size = ref(0)
+const filesize = window.filesize
 const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })

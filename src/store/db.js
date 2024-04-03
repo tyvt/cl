@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import version from '../static/version'
-let base = `https://unpkg.com/cl-lite@${version}`
+let base = `https://unpkg.com/cl-lite@${version}/`
 if (import.meta.env.MODE === 'development') {
-  base = '.'
+  base = '/'
 }
 const useDBStore = defineStore('db', () => {
   const DB = reactive({})
@@ -13,7 +13,7 @@ const useDBStore = defineStore('db', () => {
         resolve(window[DBName])
       } else {
         request({
-          url: `${base}/db/${DBName}.sqlite`,
+          url: `${base}db/${DBName}.sqlite`,
           onProgress: onProgress
         }).then(arraybuffer => {
           const checkModule = () => {
@@ -28,7 +28,6 @@ const useDBStore = defineStore('db', () => {
           }
           checkModule()
         })
-
       }
     })
   }

@@ -21,7 +21,8 @@ export default defineConfig(async ({ command, mode, ssrBuild }) => {
     plugins: [
       vue(),
       viteCompression({
-        threshold: 10240
+        threshold: 10240,
+        algorithm: 'brotliCompress',
       })
     ],
     build: {
