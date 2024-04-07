@@ -8,9 +8,10 @@
 </template>
 
 <script setup>
-import useDBStore from '../store/db'
+import loadDB from '../store/db'
 import { useRoute } from 'vue-router'
 import { ref, onMounted, computed } from 'vue'
+import { filesize } from 'filesize'
 let content = ref()
 const db = ref(null)
 const url = useRoute().query.url
@@ -19,15 +20,14 @@ const date = useRoute().query.date
 
 const total_size = ref(0)
 const current_size = ref(0)
-const filesize = window.filesize
 const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })
 onMounted(async () => {
-  const db_main = await useDBStore.loadDB('cl-main')
+  const db_main = await loadDB('cl-main')
   const main_contents = db_main.exec(`SELECT tc.detail_size FROM t_channel tc WHERE fid = ${url.split('/')[2]}`)
   total_size.value = main_contents[0].values[0][0]
-  db.value = await useDBStore.loadDB(`cl-detail-${url.split('/')[2]}`, (res) => {
+  db.value = await loadDB(`cl-detail-${url.split('/')[2]}`, (res) => {
     current_size.value = res
   })
   const contents = db.value.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)

@@ -12,14 +12,14 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import useDBStore from '../store/db'
+import loadDB from '../store/db'
 import { ref, onMounted } from 'vue'
 let categories = ref([])
 
 const router = useRouter()
 
 onMounted(async () => {
-  const db = await useDBStore.loadDB('cl-main')
+  const db = await loadDB('cl-main')
   const contents = db.exec(`SELECT tc.name, tc.fid, tc.count FROM t_channel tc`)
   const list = []
   contents[0].values.forEach(e => {

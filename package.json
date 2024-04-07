@@ -15,7 +15,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "pinia": "2.0.33",
+    "filesize": "10.1.1",
     "vue": "3.4.21",
     "vue-hooks-plus": "1.8.8",
     "vue-router": "4.3.0"

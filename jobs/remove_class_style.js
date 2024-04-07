@@ -1,7 +1,8 @@
 import { DBHelper } from "./utils.js"
-const DB = new DBHelper("./db/cl-detail-2.sqlite")
+const DB = new DBHelper("./db/cl-detail-15.sqlite")
 
 async function removeClass() {
+  console.log("removeClass")
   await DB.runSQL('SELECT * FROM t_content tc WHERE tc.content LIKE "%class=%"').then(async res => {
     if (res.length) {
       for await (let [index, iterator] of res[0].values.entries()) {
@@ -17,6 +18,7 @@ async function removeClass() {
 }
 
 async function removeStyle() {
+  console.log("removeStyle")
   await DB.runSQL('SELECT * FROM t_content tc WHERE tc.content LIKE "%style=%"').then(async res => {
     if (res.length) {
       for await (let [index, iterator] of res[0].values.entries()) {
@@ -30,6 +32,7 @@ async function removeStyle() {
 }
 
 async function removeScript() {
+  console.log("removeScript")
   await DB.runSQL('SELECT * from t_content tc WHERE tc.content LIKE "%<script%"').then(async res => {
     if (res.length) {
       for await (let [index, iterator] of res[0].values.entries()) {
@@ -43,6 +46,7 @@ async function removeScript() {
 }
 
 async function removeLink() {
+  console.log("removeLink")
   await DB.runSQL('SELECT * from t_content tc WHERE tc.content LIKE "%<link%"').then(async res => {
     if (res.length) {
       for await (let [index, iterator] of res[0].values.entries()) {

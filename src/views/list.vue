@@ -20,10 +20,11 @@
 </template>
 
 <script setup>
-import useDBStore from '../store/db'
+import loadDB from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
+import { filesize } from 'filesize'
 const db = ref(null)
 const title = useRoute().query.title
 const fid = useRoute().query.fid
@@ -35,11 +36,10 @@ const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })
 const router = useRouter()
-const filesize = window.filesize
 function getLoadMoreList(page, pageSize) {
   return new Promise((resolve, reject) => {
     const list = []
-    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid} || '/%' AND post_time NOTNULL ORDER BY post_time ASC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
+    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
     contents[0].values.forEach(e => {
       const date = new Date(Number(`${e[2]}000`))
       list.push({
@@ -66,10 +66,10 @@ function onReachBottom() {
   }
 }
 onMounted(async () => {
-  const db_main = await useDBStore.loadDB('cl-main')
+  const db_main = await loadDB('cl-main')
   const contents = db_main.exec(`SELECT tc.category_size FROM t_channel tc WHERE fid = ${fid}`)
   total_size.value = contents[0].values[0][0]
-  db.value = await useDBStore.loadDB(`cl-category-${fid}`, (res) => {
+  db.value = await loadDB(`cl-category-${fid}`, (res) => {
     current_size.value = res
   })
   loadMore()
