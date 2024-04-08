@@ -1,29 +1,18 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import viteCompression from 'vite-plugin-compression'
-import { exec } from 'child_process'
-import childProcess from 'child_process'
-import fs from 'fs'
-function execute(command) {
-  return new Promise((resolve, reject) => {
-    childProcess.exec(command, function (err, stdout, stderr) {
-      if (err != null) {
-        resolve(err)
-      } else {
-        resolve(stdout)
-      }
-    })
-  })
-}
+import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig(async ({ command, mode, ssrBuild }) => {
+  const lifecycle = process.env.npm_lifecycle_event
   return {
     base: mode == 'production' ? '/cl/' : './',
     plugins: [
       vue(),
-      viteCompression({
-        threshold: 10240,
-        algorithm: 'brotliCompress',
-      })
+      lifecycle === 'report'
+        ? visualizer({
+          gzipSize: true,
+          emitFile: true
+        })
+        : null,
     ],
     build: {
       target: 'esnext',

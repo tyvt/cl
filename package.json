@@ -7,8 +7,9 @@
     "db/*"
   ],
   "scripts": {
-    "dev": "vite",
-    "dev:prod": "vite --mode production",
+    "dev": "vite --host",
+    "dev:prod": "vite --mode production --host",
+    "report": "vite build",
     "build": "vite build"
   },
   "publishConfig": {
@@ -16,13 +17,13 @@
   },
   "dependencies": {
     "filesize": "10.1.1",
+    "swiper": "^11.1.0",
     "vue": "3.4.21",
-    "vue-hooks-plus": "1.8.8",
     "vue-router": "4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.0.4",
-    "vite": "5.1.6",
-    "vite-plugin-compression": "0.5.1"
+    "rollup-plugin-visualizer": "^5.12.0",
+    "vite": "5.1.6"
   }
 }

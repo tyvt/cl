@@ -1,6 +1,6 @@
 <template>
   <template v-if="db">
-    <div v-for="(article, index) in data?.list" :key="article.url"
+    <div v-for="(article, index) in list" :key="article.url"
       @click="router.push(`/detail?date=${article.date}&title=${article.text}&url=${article.url}`)">
       <div style="display: flex; align-items: center; justify-content: space-between;padding: 10px 12px;">
         <span style="display: flex; flex-direction: column; flex: 1;">
@@ -23,7 +23,7 @@
 import loadDB from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed, onActivated } from 'vue'
-import { useInfiniteScroll } from 'vue-hooks-plus'
+import useLoadMore from '../hooks/useLoadMore'
 import { filesize } from 'filesize'
 const db = ref(null)
 const title = ref(useRoute().query.title)
@@ -36,10 +36,11 @@ const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })
 const router = useRouter()
-function getLoadMoreList(page, pageSize) {
+async function getList() {
+  const [pageParams] = arguments
   return new Promise((resolve, reject) => {
     const list = []
-    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid.value} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
+    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid.value} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageParams.pageSize} OFFSET ${(pageParams.pageNum - 1) * pageParams.pageSize}`)
     contents[0].values.forEach(e => {
       const date = new Date(Number(`${e[2]}000`))
       list.push({
@@ -49,17 +50,12 @@ function getLoadMoreList(page, pageSize) {
       })
     })
     resolve({
-      list,
+      rows: list,
       total: total.value,
     })
   })
 }
-const { data, loadMore, reload } = useInfiniteScroll(
-  (d) => {
-    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
-    return getLoadMoreList(page, PAGE_SIZE)
-  },
-)
+const { list, loadMore, reload } = useLoadMore(getList)
 function onReachBottom() {
   if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
     loadMore()
