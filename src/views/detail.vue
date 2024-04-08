@@ -24,6 +24,7 @@ const percent = computed(() => {
   return (current_size.value / total_size.value * 100).toFixed(2)
 })
 onMounted(async () => {
+  window.scrollTo(0, 0)
   const db_main = await loadDB('cl-main')
   const main_contents = db_main.exec(`SELECT tc.detail_size FROM t_channel tc WHERE fid = ${url.split('/')[2]}`)
   total_size.value = main_contents[0].values[0][0]

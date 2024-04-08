@@ -22,13 +22,13 @@
 <script setup>
 import loadDB from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, onActivated } from 'vue'
 import { useInfiniteScroll } from 'vue-hooks-plus'
 import { filesize } from 'filesize'
 const db = ref(null)
-const title = useRoute().query.title
-const fid = useRoute().query.fid
-const total = useRoute().query.total
+const title = ref(useRoute().query.title)
+const fid = ref(useRoute().query.fid)
+const total = ref(useRoute().query.total)
 const PAGE_SIZE = 20
 const total_size = ref(0)
 const current_size = ref(0)
@@ -39,7 +39,7 @@ const router = useRouter()
 function getLoadMoreList(page, pageSize) {
   return new Promise((resolve, reject) => {
     const list = []
-    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
+    const contents = db.value.exec(`SELECT * FROM t_topic tp WHERE url like '%/' || ${fid.value} || '/%' AND post_time NOTNULL ORDER BY post_time DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`)
     contents[0].values.forEach(e => {
       const date = new Date(Number(`${e[2]}000`))
       list.push({
@@ -50,11 +50,11 @@ function getLoadMoreList(page, pageSize) {
     })
     resolve({
       list,
-      total: total,
+      total: total.value,
     })
   })
 }
-const { data, loadMore } = useInfiniteScroll(
+const { data, loadMore, reload } = useInfiniteScroll(
   (d) => {
     const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
     return getLoadMoreList(page, PAGE_SIZE)
@@ -65,13 +65,25 @@ function onReachBottom() {
     loadMore()
   }
 }
-onMounted(async () => {
+async function loadCurrentDB() {
   const db_main = await loadDB('cl-main')
-  const contents = db_main.exec(`SELECT tc.category_size FROM t_channel tc WHERE fid = ${fid}`)
+  const contents = db_main.exec(`SELECT tc.category_size FROM t_channel tc WHERE fid = ${fid.value}`)
   total_size.value = contents[0].values[0][0]
-  db.value = await loadDB(`cl-category-${fid}`, (res) => {
+  db.value = await loadDB(`cl-category-${fid.value}`, (res) => {
     current_size.value = res
   })
+}
+onActivated(async () => {
+  if (fid.value !== useRoute().query.fid) {
+    title.value = useRoute().query.title
+    fid.value = useRoute().query.fid
+    total.value = useRoute().query.total
+    await loadCurrentDB()
+    reload()
+  }
+})
+onMounted(async () => {
+  await loadCurrentDB()
   loadMore()
   window.addEventListener('scroll', () => onReachBottom())
 })

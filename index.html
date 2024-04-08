@@ -34,7 +34,7 @@
       onProgress: (res) => {
         console.log('res: ', res)
       },
-      responseType: 'text/javascript'
+      responseType: 'text'
     }).then(script => {
       const scriptEl = document.createElement('script')
       scriptEl.innerHTML = script
