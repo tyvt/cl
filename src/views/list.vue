@@ -12,11 +12,6 @@
       </div>
     </div>
   </template>
-  <div v-else
-    style="width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div>{{ `${filesize(current_size)} / ${filesize(total_size)}` }}</div>
-    <progress :max="total_size" :value="current_size"></progress>
-  </div>
 </template>
 
 <script setup>
@@ -24,17 +19,11 @@ import loadDB from '../store/db'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted, onUnmounted, computed, onActivated } from 'vue'
 import useLoadMore from '../hooks/useLoadMore'
-import { filesize } from 'filesize'
 const db = ref(null)
 const title = ref(useRoute().query.title)
 const fid = ref(useRoute().query.fid)
 const total = ref(useRoute().query.total)
 const PAGE_SIZE = 20
-const total_size = ref(0)
-const current_size = ref(0)
-const percent = computed(() => {
-  return (current_size.value / total_size.value * 100).toFixed(2)
-})
 const router = useRouter()
 async function getList() {
   const [pageParams] = arguments
@@ -62,11 +51,12 @@ function onReachBottom() {
   }
 }
 async function loadCurrentDB() {
-  const db_main = await loadDB('cl-main')
+  const db_main = await loadDB('cl-main', (currentSize) => {
+    updateProgress(currentSize, 8192, `cl-main.sqlite`)
+  })
   const contents = db_main.exec(`SELECT tc.category_size FROM t_channel tc WHERE fid = ${fid.value}`)
-  total_size.value = contents[0].values[0][0]
-  db.value = await loadDB(`cl-category-${fid.value}`, (res) => {
-    current_size.value = res
+  db.value = await loadDB(`cl-category-${fid.value}`, (currentSize) => {
+    updateProgress(currentSize, contents[0].values[0][0], `cl-category-${fid.value}.sqlite`)
   })
 }
 onActivated(async () => {
