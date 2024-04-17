@@ -2,7 +2,7 @@ import { get, DBHelper, sleep } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "../constant.js"
 
 const fixTitle = async () => {
-  const DB = new DBHelper("./db/cl-category-5.sqlite")
+  const DB = new DBHelper("./db/cl-category-7.sqlite")
   await DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 100').then(async result => {
     const data = result?.[0]?.values || []
     for await (const topic of data) {
@@ -23,7 +23,7 @@ const fixTitle = async () => {
 }
 
 const fixContent = async () => {
-  const DB = new DBHelper("./db/cl-detail-5.sqlite")
+  const DB = new DBHelper("./db/cl-detail-7.sqlite")
   await DB.runSQL('SELECT * FROM t_content tt WHERE tt.content LIKE \'%�%\' LIMIT 100').then(async result => {
     const data = result?.[0]?.values || []
     for await (const topic of data) {
