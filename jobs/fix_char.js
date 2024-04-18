@@ -1,9 +1,9 @@
-import { get, DBHelper, sleep } from "./utils.js"
+import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 import { CL_DOMAIN, DETAIL_PAGE_PREFIX } from "../constant.js"
 
-const fixTitle = async () => {
-  const DB = new DBHelper("./db/cl-category-7.sqlite")
-  await DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 100').then(async result => {
+const fixTitle = async (fid) => {
+  const DB = new DBHelper(`./db/cl-category-${fid}.sqlite`)
+  await DB.runSQL('SELECT * FROM t_topic tt WHERE tt.name LIKE \'%�%\' LIMIT 30').then(async result => {
     const data = result?.[0]?.values || []
     for await (const topic of data) {
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[1]}.html`
@@ -51,5 +51,20 @@ const fixContent = async () => {
   })
 }
 
-await fixTitle()
-await fixContent()
+async function main() {
+  const timerTotal = new TimerHelper()
+  const DB = new DBHelper("./db/cl-main.sqlite")
+  await DB.runSQL(
+    `select * from t_channel tc`
+  ).then(async (result) => {
+    const data = result?.[0]?.values || []
+    for await (const category of data) {
+      console.log(`Fetch ${category[0]} begin.`)
+      await fixTitle(category[1])
+      console.log(`Fetch ${category[0]} end.`)
+    }
+  })
+  console.log(`${timerTotal.getDuration() / 1000 / 60} mins`)
+}
+
+main()
