@@ -32,7 +32,7 @@ const fixContent = async (fid) => {
       const matched = data.match(
         /<div\sclass="tpc_content do_not_catch"\sid="conttpc">.*/
       )
-      const html = `${matched[0]
+      const html = matched && matched.length && `${matched[0]
         .replace(/ess-data/g, "src")
         .replace(/&nbsp;/g, "")
         .replace(/\siyl-data='http:\/\/a.d\/adblo_ck.jpg'/g, "")
