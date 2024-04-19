@@ -4,7 +4,7 @@ import fs from "fs"
 const detail = async (fid) => {
   const DB_CATEGORY = new DBHelper(`./db/cl-category-${fid}.sqlite`)
   await DB_CATEGORY.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 40`
+    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC LIMIT 100`
   ).then(async (res) => {
     const list = res?.[0]?.values || []
     for await (const iterator of list) {
