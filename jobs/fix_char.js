@@ -22,9 +22,9 @@ const fixTitle = async (fid) => {
   })
 }
 
-const fixContent = async () => {
-  const DB = new DBHelper("./db/cl-detail-7.sqlite")
-  await DB.runSQL('SELECT * FROM t_content tt WHERE tt.content LIKE \'%�%\' LIMIT 100').then(async result => {
+const fixContent = async (fid) => {
+  const DB = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
+  await DB.runSQL('SELECT * FROM t_content tt WHERE tt.content LIKE \'%�%\' LIMIT 30').then(async result => {
     const data = result?.[0]?.values || []
     for await (const topic of data) {
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[0]}.html`
@@ -39,7 +39,6 @@ const fixContent = async () => {
         .replace(/\sdata-link='.*?'/g, "")
         .replaceAll(`class="tpc_content do_not_catch" id="conttpc"`, "").replace(/\"/g, "'").replace(/\s+/g, ' ')}
         </div><br>`
-      console.log('html: ', html)
       await DB.update('t_content',
         {
           content: html,
@@ -61,6 +60,7 @@ async function main() {
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
       await fixTitle(category[1])
+      await fixContent(category[1])
       console.log(`Fetch ${category[0]} end.`)
     }
   })
