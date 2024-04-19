@@ -89,6 +89,7 @@ export const get = async (url, config) => {
         requestConfig,
         (res) => {
           console.log('statusCode: ', res.statusCode)
+          res.setEncoding('utf-8')
           if (res.statusCode == '302') {
             resolve({ result: "error", data: res, statusCode: res.statusCode })
             // get(url, requestConfig)

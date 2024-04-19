@@ -24,7 +24,7 @@ const fixTitle = async (fid) => {
 
 const fixContent = async (fid) => {
   const DB = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
-  await DB.runSQL('SELECT * FROM t_content tt WHERE tt.content LIKE \'%�%\' LIMIT 30').then(async result => {
+  await DB.runSQL('SELECT * FROM t_content tt WHERE tt.content LIKE \'%�%\' LIMIT 80').then(async result => {
     const data = result?.[0]?.values || []
     for await (const topic of data) {
       const url = `${CL_DOMAIN}/${DETAIL_PAGE_PREFIX}${topic[0]}.html`
@@ -59,7 +59,7 @@ async function main() {
     const data = result?.[0]?.values || []
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
-      await fixTitle(category[1])
+      // await fixTitle(category[1])
       await fixContent(category[1])
       console.log(`Fetch ${category[0]} end.`)
     }
