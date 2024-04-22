@@ -38,13 +38,14 @@ async function start() {
         const list = (await getUrl(category[1], page)) || []
         totalList.push(...list)
         const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
-        await DB_CATEGORY.insert("t_topic", totalList)
         if (totalList.length) {
           const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${totalList[totalList.length - 1].url}"`)
           const searchResult = searchResponse?.[0]?.values || []
           if (searchResult.length) {
             sleep(2000)
             break
+          } else {
+            await DB_CATEGORY.insert("t_topic", totalList)
           }
         } else {
           sleep(2000)
