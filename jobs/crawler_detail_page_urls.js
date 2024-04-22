@@ -33,6 +33,7 @@ async function start() {
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
       let page = 1
+      let count = 0
       while (true) {
         const totalList = []
         const list = (await getUrl(category[1], page)) || []
@@ -42,8 +43,9 @@ async function start() {
           const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${totalList[totalList.length - 1].url}"`)
           const searchResult = searchResponse?.[0]?.values || []
           if (searchResult.length) {
+            count++
             sleep(2000)
-            break
+            if (count > 3) break
           } else {
             await DB_CATEGORY.insert("t_topic", totalList)
           }
