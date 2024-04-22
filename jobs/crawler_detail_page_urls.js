@@ -1,7 +1,7 @@
 import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 import fs from "fs"
-const TOTAL_PAGES = 6
+const MAX_REPEAT = 3
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
@@ -41,14 +41,12 @@ async function start() {
         const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
         if (totalList.length) {
           let tempUrl = totalList[totalList.length - 1].url
-          console.log('tempUrl: ', tempUrl)
           const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${tempUrl}"`)
           const searchResult = searchResponse?.[0]?.values || []
-          console.log('searchResult: ', searchResult)
           if (searchResult.length) {
             count++
             sleep(2000)
-            if (count > 10) break
+            if (count > MAX_REPEAT) break
           } else {
             await DB_CATEGORY.insert("t_topic", totalList)
           }
@@ -59,15 +57,6 @@ async function start() {
         page++
         sleep(2000)
       }
-      // for (let page = 1; page <= TOTAL_PAGES; page++) {
-      //   const totalList = []
-      //   const list = (await getUrl(category[1], page)) || []
-      //   console.log('count', list.length)
-      //   totalList.push(...list)
-      //   const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
-      //   await DB_CATEGORY.insert("t_topic", totalList)
-      //   sleep(2000)
-      // }
       const { size } = fs.statSync(`./db/cl-category-${category[1]}.sqlite`)
       await DB.update('t_channel', {
         update_time: Math.round(new Date().getTime() / 1000),
