@@ -32,15 +32,36 @@ async function start() {
     const data = result?.[0]?.values || []
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
-      for (let page = 1; page <= TOTAL_PAGES; page++) {
+      let page = 1
+      while (true) {
         const totalList = []
         const list = (await getUrl(category[1], page)) || []
-        console.log('count', list.length)
         totalList.push(...list)
         const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
         await DB_CATEGORY.insert("t_topic", totalList)
+        if (totalList.length) {
+          const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${totalList[totalList.length - 1].url}"`)
+          const searchResult = searchResponse?.[0]?.values || []
+          if (searchResult.length) {
+            sleep(2000)
+            break
+          }
+        } else {
+          sleep(2000)
+          break
+        }
+        page++
         sleep(2000)
       }
+      // for (let page = 1; page <= TOTAL_PAGES; page++) {
+      //   const totalList = []
+      //   const list = (await getUrl(category[1], page)) || []
+      //   console.log('count', list.length)
+      //   totalList.push(...list)
+      //   const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
+      //   await DB_CATEGORY.insert("t_topic", totalList)
+      //   sleep(2000)
+      // }
       const { size } = fs.statSync(`./db/cl-category-${category[1]}.sqlite`)
       await DB.update('t_channel', {
         update_time: Math.round(new Date().getTime() / 1000),
