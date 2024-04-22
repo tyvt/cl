@@ -40,12 +40,15 @@ async function start() {
         totalList.push(...list)
         const DB_CATEGORY = new DBHelper(`./db/cl-category-${category[1]}.sqlite`)
         if (totalList.length) {
-          const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${totalList[totalList.length - 1].url}"`)
+          let tempUrl = totalList[totalList.length - 1].url
+          console.log('tempUrl: ', tempUrl)
+          const searchResponse = await DB_CATEGORY.runSQL(`SELECT * FROM t_topic WHERE url = "${tempUrl}"`)
           const searchResult = searchResponse?.[0]?.values || []
+          console.log('searchResult: ', searchResult)
           if (searchResult.length) {
             count++
             sleep(2000)
-            if (count > 3) break
+            if (count > 10) break
           } else {
             await DB_CATEGORY.insert("t_topic", totalList)
           }
