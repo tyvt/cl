@@ -1,8 +1,8 @@
 name: crawler detail page urls
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 3,10,22 * * *"
+  # schedule:
+  #   - cron: "0 3,10,22 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
