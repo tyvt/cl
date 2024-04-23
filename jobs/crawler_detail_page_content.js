@@ -78,7 +78,9 @@ async function main() {
     const data = result?.[0]?.values || []
     for await (const category of data) {
       console.log(`Fetch ${category[0]} begin.`)
-      await detail(category[1])
+      if (category[1] != 15) {
+        await detail(category[1])
+      }
       const { size } = fs.statSync(`./db/cl-category-${category[1]}.sqlite`)
       await DB.update('t_channel', {
         update_time: Math.round(new Date().getTime() / 1000),
