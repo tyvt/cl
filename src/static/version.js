@@ -1,1 +1,1 @@
-export default "1.0.344"
+export default "1.0.345"
