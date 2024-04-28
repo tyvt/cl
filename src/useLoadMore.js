@@ -1,20 +1,19 @@
-import { reactive, ref, onMounted } from 'vue'
 export default function useLoadMore(listFunction, type = 'pad') {
-  const list = ref([])
-  const total = ref(0)
-  const pageParams = reactive({
+  let list = []
+  let total = 0
+  const pageParams = {
     pageNum: 0,
     pageSize: 20,
-  })
+  }
   function padList(rows) {
-    type == 'pad' ? list.value.push(...rows) : list.value.unshift(...rows)
+    type == 'pad' ? list.push(...rows) : list.unshift(...rows)
   }
   function refreshList(rows) {
-    list.value = []
-    list.value = rows
+    list = []
+    list = rows
   }
   function reload() {
-    list.value = []
+    list = []
     pageParams.pageNum = 0
     getList()
   }
@@ -23,7 +22,7 @@ export default function useLoadMore(listFunction, type = 'pad') {
     const fn = listFunction.bind(this, pageParams)
     fn().then((res) => {
       if (pageParams.pageNum == 1) {
-        total.value = res.total
+        total = res.total
       }
       pageParams.pageNum != 1
         ? padList(res.rows)

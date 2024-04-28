@@ -1,16 +1,18 @@
-import version from '../static/version'
-let base = `https://unpkg.com/cl-lite@${version}/`
+import request from "./request"
+let base = `https://unpkg.com/cl-lite@${document.title}/`
 if (import.meta.env.MODE === 'development') {
   base = '/'
 }
-export default async function loadDB(DBName, onProgress) {
+
+export default async function loadDB(DBName, totalSize) {
   return new Promise((resolve, reject) => {
     if (window[DBName]) {
       resolve(window[DBName])
     } else {
       request({
         url: `${base}db/${DBName}.sqlite`,
-        onProgress: onProgress
+        responseType: 'arraybuffer',
+        totalSize: totalSize
       }).then(arraybuffer => {
         const checkModule = () => {
           if (!window.SQL) {
