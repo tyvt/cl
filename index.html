@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/swiper@11.1.0/swiper.css">
-  <link rel="stylesheet" href="https://unpkg.com/swiper@11.1.0/modules/pagination.css">
-  <title>1.0.347</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1.0.348</title>
   <style>
     body {
       margin: 0;
       background-color: #F9F9EC;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
     }
 
     img {
@@ -28,6 +30,7 @@
       justify-content: center;
       position: sticky;
       top: 0;
+      z-index: 9999;
     }
 
     #header {
@@ -45,21 +48,31 @@
       font-size: 20px;
     }
 
-    .content {
-      padding: 0 10px;
+    section {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      flex: 1;
     }
   </style>
-  <script type="module" crossorigin src="https://unpkg.com/cl-lite@1.0.347/dist/assets/index.js"></script>
+  <script type="module" crossorigin src="https://unpkg.com/cl-lite@1.0.348/dist/assets/index.js"></script>
 </head>
 
 <body>
-  <div id="app">
-  </div>
-  <div
-    style="position: absolute; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div id="progress-message"></div>
-    <progress id="progress"></progress>
-  </div>
+  <header>
+    <svg onclick="history.back()" class="back" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+      width="20" height="20">
+      <path fill="#ffffff"
+        d="M532.526499 904.817574L139.506311 511.797385 532.526499 118.777197c12.258185-12.258185 12.432147-32.892131-0.187265-45.51052-12.707416-12.707416-32.995485-12.703323-45.511543-0.187265L75.166957 484.739123c-7.120165 7.120165-10.163477 17.065677-8.990768 26.624381-1.500167 9.755178 1.5104 20.010753 8.990768 27.491121l411.660734 411.660734c12.258185 12.258185 32.892131 12.432147 45.511543-0.187265 12.707416-12.707416 12.7023-32.995485 0.187265-45.51052z">
+      </path>
+      </path>
+    </svg>
+    <span id="header">cl-lite</span>
+  </header>
+  <section id="home" style="display: none;"></section>
+  <section id="list" style="display: none;"></section>
+  <section id="detail" style="display: none;"></section>
+  <progress id="progress"></progress>
 </body>
 
 </html>
