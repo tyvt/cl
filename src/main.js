@@ -36,7 +36,7 @@ request({
 let currentCategory
 window.addEventListener('load', async function () {
   if (!location.hash) {
-    location.hash = 'home'
+    location.hash = '/home'
   }
   await setActiveLink()
 })
