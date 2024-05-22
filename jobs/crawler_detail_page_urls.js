@@ -1,11 +1,11 @@
 import { CL_DOMAIN } from "../constant.js"
 import { get, DBHelper, TimerHelper, sleep } from "./utils.js"
 import fs from "fs"
-const MAX_REPEAT = 3
+const MAX_REPEAT = 2
 
 const getUrl = async (fid, page) => {
   const { result, data } = await get(
-    `${CL_DOMAIN}/thread0806.php?fid=${fid}&page=${page}`
+    `${CL_DOMAIN}/thread0806.php?search=today&fid=${fid}&page=${page}`
   )
   if (result == "error") return false
   const list = data.match(/<a href="htm_data\/.*">.*?<\/a>/g) || []
@@ -19,6 +19,7 @@ const getUrl = async (fid, page) => {
       post_time: ''
     })
   })
+  console.log("🚀 ~ getUrl ~ arr:", arr)
   return arr
 }
 
