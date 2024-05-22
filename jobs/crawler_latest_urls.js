@@ -3,7 +3,7 @@ import fs from 'fs'
 const suffix = ['x', 'y', 'x']
 const allUrls = []
 const validUrls = []
-for (let index = 1000; index < 9999; index++) {
+for (let index = 3000; index < 9999; index++) {
   let temp = String(index)
   if (temp.length != 4) {
     temp = [...new Array(4 - temp.split('').length).fill(0), ...temp.split('')].join('')
