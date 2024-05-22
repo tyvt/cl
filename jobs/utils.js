@@ -74,7 +74,8 @@ export const get = async (url, config) => {
   const requestConfig = {
     headers: {
       "user-agent": new UserAgent().toString(),
-    }
+    },
+    timeout: 1000
   }
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http
