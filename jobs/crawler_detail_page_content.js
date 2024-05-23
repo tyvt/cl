@@ -4,7 +4,7 @@ import fs from "fs"
 const detail = async (fid) => {
   const DB_CATEGORY = new DBHelper(`./db/cl-category-${fid}.sqlite`)
   await DB_CATEGORY.runSQL(
-    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL ORDER BY rowid DESC`
+    `SELECT url FROM t_topic tt WHERE tt.post_time = '' OR tt.post_time ISNULL`
   ).then(async (res) => {
     const list = res?.[0]?.values || []
     for await (const iterator of list) {
@@ -60,9 +60,9 @@ const count = async (fid) => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   let size = fs.statSync(`./db/cl-detail-${fid}.sqlite`).size
   const DB_DETAIL = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
-  if(size > 90000000) {
+  if(size > 80000000) {
     const DB_CATEGORY = new DBHelper(`./db/cl-category-${fid}.sqlite`)
-    await DB_CATEGORY.runSQL(`SELECT url FROM t_topic ORDER BY post_time ASC LIMIT 500`).then(async categoryRes => {
+    await DB_CATEGORY.runSQL(`SELECT url FROM t_topic ORDER BY post_time ASC LIMIT 1000`).then(async categoryRes => {
       const list = categoryRes[0].values
       if(categoryRes[0].values) {
         for await (const iterator of list) {
