@@ -174,15 +174,16 @@ async function setActiveLink() {
           const contents = db_detail.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
           contents[0].values.forEach(e => {
             const content = `<h3>${title}</h3><span>${date}</span><br><br>${e[0]}`
+            content.replaceAll('<video', `<video controls`)
             detailDOM.innerHTML = content
-            const regex = /[0-9a-fA-F]{40}/;
+            const magnetRegex = /[0-9a-fA-F]{40}/
             const MAGNET_PREFIX = "magnet:?xt=urn:btih:"
-            const matched = content.match(regex)
-            if(matched && matched[0]) {
+            const matchedMagnets = content.match(magnetRegex)
+            if (matchedMagnets && matchedMagnets[0]) {
               const downloadButton = document.createElement('button')
               downloadButton.innerText = '复制磁链'
               downloadButton.onclick = () => {
-                navigator.clipboard.writeText(`${MAGNET_PREFIX}${matched[0]}`);
+                navigator.clipboard.writeText(`${MAGNET_PREFIX}${matched[0]}`)
               }
               detailDOM.appendChild(downloadButton)
             }
