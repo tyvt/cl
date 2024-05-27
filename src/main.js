@@ -174,7 +174,7 @@ async function setActiveLink() {
           const contents = db_detail.exec(`SELECT content FROM t_content tc WHERE url="${url}"`)
           contents[0].values.forEach(e => {
             const content = `<h3>${title}</h3><span>${date}</span><br><br>${e[0]}`
-            content.replaceAll('<video', `<video controls`)
+            content.replaceAll('<video', `<video controls preload`)
             detailDOM.innerHTML = content
             const magnetRegex = /[0-9a-fA-F]{40}/
             const MAGNET_PREFIX = "magnet:?xt=urn:btih:"
