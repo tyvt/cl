@@ -60,11 +60,11 @@ const count = async (fid) => {
   const DB_MAIN = new DBHelper("./db/cl-main.sqlite")
   let size = fs.statSync(`./db/cl-detail-${fid}.sqlite`).size
   const DB_DETAIL = new DBHelper(`./db/cl-detail-${fid}.sqlite`)
-  if(size > 50000000) {
+  if (size > 50000000) {
     const DB_CATEGORY = new DBHelper(`./db/cl-category-${fid}.sqlite`)
-    await DB_CATEGORY.runSQL(`SELECT url FROM t_topic ORDER BY post_time ASC LIMIT 100`).then(async categoryRes => {
+    await DB_CATEGORY.runSQL(`SELECT url FROM t_topic ORDER BY post_time ASC LIMIT 200`).then(async categoryRes => {
       const list = categoryRes[0].values
-      if(categoryRes[0].values) {
+      if (categoryRes[0].values) {
         for await (const iterator of list) {
           await DB_DETAIL.runSQL(`DELETE FROM t_content WHERE url = "${iterator[0]}"`)
           await DB_CATEGORY.runSQL(`DELETE FROM t_topic WHERE url = "${iterator[0]}"`)
