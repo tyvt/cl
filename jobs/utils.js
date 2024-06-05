@@ -112,6 +112,41 @@ export const get = async (url, config) => {
   })
 }
 
+export const head = async (url) => {
+  const path = new URL(url)
+  const requestConfig = {
+    headers: {
+      "user-agent": new UserAgent().toString(),
+    },
+    timeout: 1000
+  }
+  return new Promise((resolve, reject) => {
+    const protocol = url.startsWith("https") ? https : http
+    console.log(
+      `Fetch ${url}  ${new Date(Date.now()).toLocaleDateString()} ${new Date(
+        Date.now()
+      ).toLocaleTimeString()}`
+    )
+    protocol
+      .request(
+        {
+          method: 'HEAD',
+          hostname: path.host,
+          path: path.pathname + url.search,
+          ...requestConfig
+        },
+        (res) => {
+          console.log('statusCode: ', res.statusCode)
+          resolve(res.statusCode)
+        }
+      )
+      .on("error", (e) => {
+        console.log("error", e)
+        resolve({ result: "error", data: "" })
+      })
+  })
+}
+
 export const request = (options, data) => {
   const url = new URL(options.url)
   options.hostname = url.host

@@ -1,4 +1,4 @@
-import { get } from "./utils.js"
+import { head } from "./utils.js"
 import fs from 'fs'
 const suffix = ['x', 'y', 'x']
 const allUrls = []
@@ -13,7 +13,7 @@ for (let index = 3000; index < 9999; index++) {
   })
 }
 for await (const url of allUrls) {
-  const { result, data, statusCode } = await get(url)
+  const statusCode = await head(url)
   if (statusCode == '200') {
     validUrls.push(url)
   }
