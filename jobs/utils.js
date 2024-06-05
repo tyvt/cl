@@ -132,16 +132,15 @@ export const head = async (url) => {
         {
           method: 'HEAD',
           hostname: path.host,
-          path: path.pathname + url.search,
+          path: path.pathname,
           ...requestConfig
         },
         (res) => {
           console.log('statusCode: ', res.statusCode)
-          resolve(res.statusCode)
+          resolve({ result: "success", data: "", statusCode: res.statusCode })
         }
       )
       .on("error", (e) => {
-        console.log("error", e)
         resolve({ result: "error", data: "" })
       })
   })
