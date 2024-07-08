@@ -1,6 +1,6 @@
 {
   "name": "cl-lite",
-  "version": "1.0.497",
+  "version": "1.0.498",
   "type": "module",
   "files": [
     "dist/*",
